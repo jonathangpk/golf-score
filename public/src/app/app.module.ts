@@ -3,22 +3,24 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
-import { RegisterComponent } from './register.component';
 import { ShellModule } from './shell/shell.module';
 import { LoginComponent } from './login/login.component';
 import { MatButtonModule, MatCardModule, MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegisterComponent } from './register/register.component';
+import { RoutingModule } from './core/routing.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    RoutingModule,
     ShellModule,
     MatButtonModule,
     MatCardModule,
