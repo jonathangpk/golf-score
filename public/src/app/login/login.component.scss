@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(-30deg, rgba(210,255,82,1) 0%, rgba(38,86,145,1) 100%);
+}
+.card {
+  width: 80%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+button {
+  margin: 5px 0;
+}
