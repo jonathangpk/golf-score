@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-title>Neuen Platz hinzufügen</mat-card-title>
+  <mat-form-field>
+    <input matInput placeholder="Name des Platzes" #name>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Ort" #city>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Anzahl der Löcher" value="9" #holes>
+  </mat-form-field>
+  <div class="scorecard">
+      <div class="hole">1</div>
+      <input type="text" class="par">
+      <input type="text" class="hcp">
+      <div class="hole">2</div>
+      <input type="text" class="par">
+      <input type="text" class="hcp">
+      <div class="hole">3</div>
+      <input type="text" class="par">
+      <input type="text" class="hcp">
+  </div>
+  <button mat-stroked-button color="primary" (click)="onCreateCourse(name.value, city.value, holes.value)">Platz erstellen</button>
+</mat-card>

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Register } from '../store/auth.actions';
 
 @Component({
   selector: 'app-register',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  constructor(private store: Store) { }
 
   ngOnInit() {
+  }
+  onRegister(name, handicap, email, password) {
+    this.store.dispatch(new Register({name, handicap, email, password}));
   }
 
 }

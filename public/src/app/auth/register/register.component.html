@@ -1,0 +1,18 @@
+<mat-card class="card">
+  <mat-card-title>Registrierung</mat-card-title>
+  <mat-card-subtitle>Calculate your Golf Score</mat-card-subtitle>
+    <mat-form-field class="name">
+      <input matInput placeholder="Name" #name>
+    </mat-form-field>
+    <mat-form-field class="handicap">
+      <input matInput placeholder="Handicap" type="number" #handicap>
+    </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="E-Mail" type="email" #email>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Password" type="password" #password>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="onRegister(name.value, handicap.value, email.value, password.value)">Registrieren</button>
+  <a routerLink="/login">Schon Registriert? Hier einloggen</a>
+</mat-card>
