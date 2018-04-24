@@ -10,6 +10,8 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { NgxsModule } from '@ngxs/store';
 import { UsersState } from './store/user.state';
 import { CourseState } from './store/course.state';
+import { RoundState } from './store/round.state';
+import { FirestoreService } from '../core/firestore.service';
 
 @NgModule({
   declarations: [
@@ -26,11 +28,15 @@ import { CourseState } from './store/course.state';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     NgxsModule.forFeature([
       UsersState,
-      CourseState
+      CourseState,
+      RoundState
     ])
+  ],
+  providers: [
+    FirestoreService
   ],
   exports: [
     ShellComponent

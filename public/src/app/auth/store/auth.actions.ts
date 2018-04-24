@@ -21,3 +21,9 @@ export class AuthChange {
   static readonly type = '[AUTH] Auth Change';
   constructor(public payload: {uid: string, user: User}) {}
 }
+export class StartQuery {
+  static readonly type = '[AUTH] Start Query';
+}
+export class StopQuery {
+  static readonly type = '[AUTH] Stop Query';
+}

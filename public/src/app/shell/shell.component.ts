@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { StartQuery } from '../auth/store/auth.actions';
+import { FirestoreService } from '../core/firestore.service';
 
 @Component({
   selector: 'app-shell',
@@ -10,4 +13,8 @@ import { Component } from '@angular/core';
     <router-outlet></router-outlet>
   `
 })
-export class ShellComponent {}
+export class ShellComponent {
+  constructor(private store: Store, private fss: FirestoreService) {
+    this.fss.queryAll();
+  }
+}

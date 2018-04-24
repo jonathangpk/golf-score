@@ -1,5 +1,5 @@
 import { Action, State, StateContext } from '@ngxs/store';
-import { ChangeUserInfo } from './user.actions';
+import { ChangeUserInfo, TryChangeUserInfo } from './user.actions';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
@@ -24,19 +24,19 @@ export interface UsersStateModel {
 })
 export class UsersState {
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth) {}
-  @Action(ChangeUserInfo)
-  changeUserInfo({ patchState }: StateContext<UsersStateModel>, { payload }: ChangeUserInfo) {
+  @Action(TryChangeUserInfo)
+  tryChangeUserInfo({ patchState }: StateContext<UsersStateModel>, { payload }: TryChangeUserInfo) {
     const uid = this.afAuth.auth.currentUser.uid;
     return Observable.fromPromise(
       this.fs.doc(`users/${uid}`).set(payload)
-      .then(r => {
-        patchState({
-          user: {
-            name: payload.name,
-            handicap: payload.handicap
-          }
-        });
-      })
     );
+  }
+  @Action(ChangeUserInfo)
+  changeUserInfo({ patchState }: StateContext<UsersStateModel>, { payload }: ChangeUserInfo) {
+    patchState({
+      user: {
+        ...payload
+      }
+    });
   }
 }

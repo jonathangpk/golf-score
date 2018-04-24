@@ -7,6 +7,7 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { User } from 'firebase';
 import { ChangeUserInfo } from '../../shell/store/user.actions';
+import { FirestoreService } from '../../core/firestore.service';
 
 export interface AuthStateModel {
   uid: string;
@@ -21,7 +22,7 @@ export interface AuthStateModel {
   }
 })
 export class AuthState {
-  constructor(private afAuth: AngularFireAuth, private router: Router) {}
+  constructor(private afAuth: AngularFireAuth, private router: Router, private fss: FirestoreService) {}
   @Action(AuthChange)
   authChange({ patchState }: StateContext<AuthStateModel>, { payload }: AuthChange) {
     patchState ({
@@ -72,6 +73,7 @@ export class AuthState {
 
   @Action(Logout)
   logout({ }: StateContext<AuthStateModel>) {
+    this.fss.unsubscribeAll();
     return Observable.fromPromise(
       this.afAuth.auth.signOut())
       .pipe(tap(() => {

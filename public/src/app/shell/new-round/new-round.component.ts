@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { TryAddRound } from '../store/round.actions';
 
 @Component({
   selector: 'app-new-round',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewRoundComponent implements OnInit {
 
-  constructor() { }
+  constructor(private store: Store) { }
 
   ngOnInit() {
+  }
+  onCreateRound(name, course) {
+    this.store.dispatch(new TryAddRound({name, course}));
   }
 
 }

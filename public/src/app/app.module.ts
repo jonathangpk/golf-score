@@ -39,7 +39,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
   ],
   providers: [
     AngularFireAuth,
-    AuthGuard
+    AuthGuard,
   ],
   bootstrap: [AppComponent]
 })

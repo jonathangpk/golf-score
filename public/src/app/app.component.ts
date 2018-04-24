@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AuthChange } from './auth/store/auth.actions';
+import { AuthChange, StartQuery } from './auth/store/auth.actions';
 
 @Component({
   selector: 'app-root',
