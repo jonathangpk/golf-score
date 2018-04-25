@@ -9,15 +9,41 @@ import { Course } from '../models/course.model';
   styleUrls: ['./new-course.component.scss']
 })
 export class NewCourseComponent implements OnInit {
-  course: Course = {name: '', city: '', holes: 9, scorecard: {}};
+  course: Course = {name: '', city: '', holes: 9, scorecard: this._getDefaultScorecard(9)};
   holesIter: any[] = new Array(9);
+  maxholes = 9
   constructor(private store: Store) { }
 
   ngOnInit() {
   }
   onCreateCourse() {
     console.log(this.course);
-    this.store.dispatch(new CreateCourse(this.course));
+
+    // making sure Scorecard is not bigger than the Course (hole count)
+    const create = this.course;
+    const scorecard = {};
+    for (let i = 0; i < create.holes; i++) {
+      scorecard[i] = create.scorecard[i];
+    }
+    create.scorecard = scorecard;
+    //this.store.dispatch(new CreateCourse(create));
+  }
+  onHolesChange() {
+    const currSize = this.course.holes;
+    if (currSize > this.maxholes) {
+      this.course.scorecard = {
+        ...this._getDefaultScorecard(currSize),
+        ...this.course.scorecard
+      };
+    }
+    this.holesIter = new Array(this.course.holes);
+  }
+  _getDefaultScorecard(size) {
+    const ret = {}
+    for (let i = 0; i < size; i++) {
+      ret[i] = {dis: undefined, par: undefined, hcp: undefined};
+    }
+    return ret;
   }
 
 }

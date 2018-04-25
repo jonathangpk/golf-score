@@ -37,6 +37,7 @@ export class RoundState {
       this.fs.collection('rounds').add({
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         created: new Date().toJSON(),
+        creator: uid,
         users: [uid],
         ...payload
       }).then(r => {

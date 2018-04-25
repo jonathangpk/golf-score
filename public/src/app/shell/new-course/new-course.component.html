@@ -8,20 +8,28 @@
       <input matInput placeholder="Ort" [(ngModel)]="course.city" name="city">
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Anzahl der Löcher" value="9" #holes="ngModel" [(ngModel)]="course.holes" name="holes">
+      <input matInput placeholder="Anzahl der Löcher" type="number" value="9" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.holes" name="holes">
     </mat-form-field>
-    <button mat-stroked-button color="primary" type="submit" [disabled]="!courseForm.form.valid">Platz erstellen</button>
     <div class="scorecard">
-      <div>
-        <div>loch</div>
-        <div>par</div>
-        <div>hcp</div>
-      </div>
+      <div class="score-label">loch</div>
+      <div class="score-label">dis</div>
+      <div class="score-label">par</div>
+      <div class="score-label">hcp</div>
       <ng-container *ngFor="let a of holesIter; index as i">
-        <div class="hole">{{ i }}</div>
-        <input type="text" class="par">
-        <input type="text" class="hcp">
+        <div class="score-cell hole">{{ i + 1 }}</div>
+        <mat-form-field>
+          <input matInput name="dis" [(ngModel)]="course.scorecard[i].dis" class="score-input score-cell" placeholder="Distanz" type="number">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput name="par" [(ngModel)]="course.scorecard[i].par" class="score-input score-cell" placeholder="Par" type="number">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput name="hcp" [(ngModel)]="course.scorecard[i].hcp" class="score-input score-cell" placeholder="Handicap" type="number">
+        </mat-form-field>
       </ng-container>
+    </div>
+    <div class="submit-button">
+      <button mat-stroked-button color="primary" type="submit" [disabled]="!courseForm.form.valid">Platz erstellen</button>
     </div>
   </form>
 </mat-card>
