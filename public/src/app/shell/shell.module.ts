@@ -1,6 +1,14 @@
 import { NgModule } from '@angular/core';
 import { ShellComponent } from './shell.component';
-import { MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatToolbarModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatIconModule,
+  MatInputModule,
+  MatSnackBarModule,
+  MatTabsModule,
+  MatToolbarModule
+} from '@angular/material';
 import { NewRoundComponent } from './new-round/new-round.component';
 import { HomeComponent } from './home/home.component';
 import { RoutingModule } from '../core/routing.module';
@@ -12,6 +20,9 @@ import { UsersState } from './store/user.state';
 import { CourseState } from './store/course.state';
 import { RoundState } from './store/round.state';
 import { FirestoreService } from '../core/firestore.service';
+import { CommonModule } from '@angular/common';
+import { RoundDetailComponent } from './round-detail/round-detail.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,15 +30,20 @@ import { FirestoreService } from '../core/firestore.service';
     NewRoundComponent,
     HomeComponent,
     NewCourseComponent,
-    ProfileComponent
+    ProfileComponent,
+    RoundDetailComponent
   ],
   imports: [
+    CommonModule,
+    FormsModule,
     MatToolbarModule,
     MatCardModule,
     RoutingModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatSnackBarModule,
+    MatTabsModule,
     AngularFirestoreModule.enablePersistence(),
     NgxsModule.forFeature([
       UsersState,

@@ -1,24 +1,27 @@
 <mat-card>
   <mat-card-title>Neuen Platz hinzufügen</mat-card-title>
-  <mat-form-field>
-    <input matInput placeholder="Name des Platzes" #name>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Ort" #city>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Anzahl der Löcher" value="9" #holes>
-  </mat-form-field>
-  <div class="scorecard">
-      <div class="hole">1</div>
-      <input type="text" class="par">
-      <input type="text" class="hcp">
-      <div class="hole">2</div>
-      <input type="text" class="par">
-      <input type="text" class="hcp">
-      <div class="hole">3</div>
-      <input type="text" class="par">
-      <input type="text" class="hcp">
-  </div>
-  <button mat-stroked-button color="primary" (click)="onCreateCourse(name.value, city.value, holes.value)">Platz erstellen</button>
+  <form (ngSubmit)="onCreateCourse()" #courseForm="ngForm">
+    <mat-form-field>
+      <input matInput placeholder="Name des Platzes" [(ngModel)]="course.name" name="name">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Ort" [(ngModel)]="course.city" name="city">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Anzahl der Löcher" value="9" #holes="ngModel" [(ngModel)]="course.holes" name="holes">
+    </mat-form-field>
+    <button mat-stroked-button color="primary" type="submit" [disabled]="!courseForm.form.valid">Platz erstellen</button>
+    <div class="scorecard">
+      <div>
+        <div>loch</div>
+        <div>par</div>
+        <div>hcp</div>
+      </div>
+      <ng-container *ngFor="let a of holesIter; index as i">
+        <div class="hole">{{ i }}</div>
+        <input type="text" class="par">
+        <input type="text" class="hcp">
+      </ng-container>
+    </div>
+  </form>
 </mat-card>

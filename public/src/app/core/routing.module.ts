@@ -8,6 +8,7 @@ import { NewRoundComponent } from '../shell/new-round/new-round.component';
 import { HomeComponent } from '../shell/home/home.component';
 import { NewCourseComponent } from '../shell/new-course/new-course.component';
 import { ProfileComponent } from '../shell/profile/profile.component';
+import { RoundDetailComponent } from '../shell/round-detail/round-detail.component';
 
 export const appRoutes = [
   { path: 'login', component: LoginComponent },
@@ -17,10 +18,11 @@ export const appRoutes = [
     canActivate: [AuthGuard],
     component: ShellComponent,
     children: [
-      { path: '', component: HomeComponent},
-      { path: 'round/new', component: NewRoundComponent},
-      { path: 'course/new', component: NewCourseComponent},
-      { path: 'profile', component: ProfileComponent}
+      { path: '', component: HomeComponent },
+      { path: 'round/new', component: NewRoundComponent },
+      { path: 'round/:id', component: RoundDetailComponent },
+      { path: 'course/new', component: NewCourseComponent },
+      { path: 'profile', component: ProfileComponent }
     ]
   },
   { path: '**', redirectTo: ''}

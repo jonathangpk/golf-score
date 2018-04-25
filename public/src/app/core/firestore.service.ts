@@ -5,22 +5,36 @@ import { Store } from '@ngxs/store';
 import { AddCoursesState, RemoveCourseState } from '../shell/store/course.actions';
 import { ChangeUserInfo } from '../shell/store/user.actions';
 import { Subscription } from 'rxjs/Subscription';
+import { AddRound } from '../shell/store/round.actions';
+import { Round } from '../shell/models/round.model';
 
 
 @Injectable()
 export class FirestoreService {
   subs: Subscription[] = [];
+  userSubs: {[id: string]: Subscription} = {};
+  roundSubs: {[id: string]: Subscription} = {};
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private store: Store) {
     console.log('service');
   }
   queryAll() {
     this.queryCourses();
-    this.queryUser();
-    this.queryRounds()
+    this.queryLogedInUser();
+    this.queryRounds();
   }
   unsubscribeAll() {
     console.log('Firestore ngOnDestroy');
     this.subs.forEach(s => s.unsubscribe());
+    for (const k in this.userSubs) {
+      if (this.userSubs[k]) {
+        this.userSubs[k].unsubscribe();
+      }
+    }
+    for (const k in this.roundSubs) {
+      if (this.roundSubs[k]) {
+        this.roundSubs[k].unsubscribe();
+      }
+    }
   }
   queryCourses() {
     this.subs.push(
@@ -39,7 +53,7 @@ export class FirestoreService {
         })
     );
   }
-  queryUser() {
+  queryLogedInUser() {
     const uid = this.afAuth.auth.currentUser.uid;
     this.subs.push(
       this.fs.doc(`users/${uid}`).valueChanges()
@@ -51,16 +65,38 @@ export class FirestoreService {
         })
     );
   }
-  queryUsers() {
-
+  queryUser(uid) {
+    this.userSubs[uid] = this.fs.doc(`users/${uid}`).valueChanges()
+      .subscribe(doc => {
+        console.log('query user uid', doc);
+      });
   }
   queryRounds() {
     const uid = this.afAuth.auth.currentUser.uid;
     this.subs.push(
       this.fs.collection(`users/${uid}/rounds`).stateChanges()
         .subscribe(r => {
-
+          r.forEach(e => {
+            this.queryRound(uid, e.payload.doc.id);
+          });
         })
-    )
+    );
+  }
+  queryRound(uid, rid) {
+    if (rid) {
+      this.roundSubs[rid] = this.fs.doc(`rounds/${rid}`).valueChanges()
+        .subscribe((r: Round) => {
+          if (r === null) {
+            // deleted
+          } else {
+            r.users
+              .filter(id => id !== uid)
+              .forEach(id => this.queryUser(id));
+            this.store.dispatch(new AddRound({id: rid, ...r}));
+          }
+        });
+    } else {
+      console.log('err');
+    }
   }
 }

@@ -6,3 +6,6 @@ export class TryChangeUserInfo {
   static readonly type = '[USER] Try Change User Info';
   constructor (public payload: {name: string, handicap: number}) {}
 }
+export class AddUser {
+  static readonly type = '[USER] Add User';
+}
