@@ -31,6 +31,7 @@ export class NewCourseComponent implements OnInit {
   onHolesChange() {
     const currSize = this.course.holes;
     if (currSize > this.maxholes) {
+      this.maxholes = currSize;
       this.course.scorecard = {
         ...this._getDefaultScorecard(currSize),
         ...this.course.scorecard
