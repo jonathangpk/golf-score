@@ -1,12 +1,10 @@
 import { Course } from '../models/course.model';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AddCoursesState, CreateCourse } from './course.actions';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
-import { StartQuery } from '../../auth/store/auth.actions';
-import { tap } from 'rxjs/operators';
 
 
 export interface CourseStateModel {
@@ -18,14 +16,7 @@ export interface CourseStateModel {
 @State<CourseStateModel>({
   name: 'course',
   defaults: {
-    courses: {
-      'fjsdlkaaf' : {
-        name: 'Sdfas',
-        city: 'fsdF',
-        holes: 1,
-        scorecard: {}
-      }
-    }
+    courses: {}
   }
 })
 export class CourseState {
@@ -51,5 +42,16 @@ export class CourseState {
         ...payload
       }
     });
+  }
+  @Selector()
+  static coursesArray(state: CourseStateModel) {
+    const n = [];
+    const c = state.courses;
+    for (const id in c) {
+      if (c[id]) {
+        n.push({id, ...c[id]});
+      }
+    }
+    return n;
   }
 }

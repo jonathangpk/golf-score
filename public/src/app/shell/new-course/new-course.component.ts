@@ -26,7 +26,7 @@ export class NewCourseComponent implements OnInit {
       scorecard[i] = create.scorecard[i];
     }
     create.scorecard = scorecard;
-    //this.store.dispatch(new CreateCourse(create));
+    this.store.dispatch(new CreateCourse(create));
   }
   onHolesChange() {
     const currSize = this.course.holes;

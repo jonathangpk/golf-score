@@ -1,18 +1,18 @@
 <mat-card>
   <mat-card-title>Neuen Platz hinzufügen</mat-card-title>
   <form (ngSubmit)="onCreateCourse()" #courseForm="ngForm">
-    <mat-form-field>
-      <input matInput placeholder="Name des Platzes" [(ngModel)]="course.name" name="name">
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Name des Platzes" required [(ngModel)]="course.name" name="name">
     </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Ort" [(ngModel)]="course.city" name="city">
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Ort" required [(ngModel)]="course.city" name="city">
     </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Anzahl der Löcher" type="number" value="9" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.holes" name="holes">
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Anzahl der Löcher" required type="number" value="9" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.holes" name="holes">
     </mat-form-field>
     <div class="scorecard">
       <div class="score-label">loch</div>
-      <div class="score-label">dis</div>
+      <div class="score-label">dis <span style="font-weight: lighter">(opt.)</span></div>
       <div class="score-label">par</div>
       <div class="score-label">hcp</div>
       <ng-container *ngFor="let a of holesIter; index as i">
@@ -21,10 +21,10 @@
           <input matInput name="dis" [(ngModel)]="course.scorecard[i].dis" class="score-input score-cell" placeholder="Distanz" type="number">
         </mat-form-field>
         <mat-form-field>
-          <input matInput name="par" [(ngModel)]="course.scorecard[i].par" class="score-input score-cell" placeholder="Par" type="number">
+          <input matInput name="par" [(ngModel)]="course.scorecard[i].par" required class="score-input score-cell" placeholder="Par" type="number">
         </mat-form-field>
         <mat-form-field>
-          <input matInput name="hcp" [(ngModel)]="course.scorecard[i].hcp" class="score-input score-cell" placeholder="Handicap" type="number">
+          <input matInput name="hcp" [(ngModel)]="course.scorecard[i].hcp" required class="score-input score-cell" placeholder="Handicap" type="number">
         </mat-form-field>
       </ng-container>
     </div>

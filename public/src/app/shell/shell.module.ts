@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ShellComponent } from './shell.component';
 import {
+  MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
   MatIconModule,
@@ -44,6 +45,7 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatSnackBarModule,
     MatTabsModule,
+    MatAutocompleteModule,
     AngularFirestoreModule.enablePersistence(),
     NgxsModule.forFeature([
       UsersState,
