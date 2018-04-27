@@ -6,8 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { User } from 'firebase';
-import { ChangeUserInfo } from '../../shell/store/user.actions';
 import { FirestoreService } from '../../core/firestore.service';
+import { ChangeUserInfo } from '../../shell/store/round.actions';
 
 export interface AuthStateModel {
   uid: string;

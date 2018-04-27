@@ -1,4 +1,5 @@
 import { Round, Score } from '../models/round.model';
+import { UserModel } from './round.state';
 export class SetCurrentRound {
   static readonly type = '[Round] Set Current Round';
   constructor (public payload: {id: string}) {}
@@ -31,4 +32,19 @@ export class TryChangeScore {
 export class ChangeScore {
   static readonly type = '[Round] Change Score';
   constructor(public payload: {uid: string, rid: string, score: Score}) {}
+}
+
+
+
+export class ChangeUserInfo {
+  static readonly type = '[USER] Change User Info';
+  constructor (public payload: UserModel) {}
+}
+export class TryChangeUserInfo {
+  static readonly type = '[USER] Try Change User Info';
+  constructor (public payload: UserModel) {}
+}
+export class ChangeRoundUserInfo {
+  static readonly type = '[USER] Change Round User Info';
+  constructor (public payload: {rid: string, uid: string, user: UserModel}) {}
 }

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Logout } from '../../auth/store/auth.actions';
-import { TryChangeUserInfo } from '../store/user.actions';
-import { UserModel, UserState } from '../store/user.state';
 import { Observable } from 'rxjs/Observable';
+import { TryChangeUserInfo } from '../store/round.actions';
+import { RoundState, UserModel } from '../store/round.state';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit {
-  @Select(UserState.localUser) user$: Observable<UserModel>;
+  @Select(RoundState.localUser) user$: Observable<UserModel>;
   constructor(private store: Store) { }
 
   ngOnInit() {

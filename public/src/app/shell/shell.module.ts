@@ -17,7 +17,6 @@ import { NewCourseComponent } from './new-course/new-course.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { NgxsModule } from '@ngxs/store';
-import { UserState } from './store/user.state';
 import { CourseState } from './store/course.state';
 import { RoundState } from './store/round.state';
 import { FirestoreService } from '../core/firestore.service';
@@ -56,7 +55,6 @@ import { RoundResultComponent } from './round-detail/round-result/round-result.c
     MatAutocompleteModule,
     AngularFirestoreModule.enablePersistence(),
     NgxsModule.forFeature([
-      UserState,
       CourseState,
       RoundState
     ])

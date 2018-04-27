@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Select } from '@ngxs/store';
-import { RoundState } from '../../store/round.state';
+import { RoundState, UserModel } from '../../store/round.state';
 import { Course } from '../../models/course.model';
 import { Observable } from 'rxjs/Observable';
 import { MatSnackBar } from '@angular/material';
@@ -19,17 +19,18 @@ export class RoundResultComponent implements OnInit {
   @Select(state => state.course.courses) courses$: Observable<Course>;
   @Select(RoundState.currentRound) round$: Observable<Round>;
   @Select(RoundState.currentScores) scores$: Observable<{[id: string]: number}>;
-  combined$ = Observable.combineLatest(this.courses$, this.round$, this.scores$);
+  @Select(RoundState.currentUsers) users$: Observable<{[id: string]: UserModel}>
+  combined$ = Observable.combineLatest(this.courses$, this.round$, this.scores$, this.users$);
   constructor(private sb: MatSnackBar, private afAuth: AngularFireAuth) {
-    this.combined$.subscribe(([courses, round, scores]) => {
+    this.combined$.subscribe(([courses, round, scores, users]) => {
       if (round) {
         const course = courses[round.course];
         if (!course || !scores) {
-          this.sb.open('Plätze sind noch nicht geladen', '', {duration: 2000});
+          this.sb.open('Noch nicht alle daten geladen', '', {duration: 2000});
           return;
         }
-        const results = this.getResults(scores, course);
-        console.log('results', results);
+        const results = this.getResults(scores, course, users);
+        console.log(results);
         this.userSummary = results.find(e => e.uid === this.afAuth.auth.currentUser.uid);
         this.summary = results
           .sort((a, b) => a.brutto - b.brutto);
@@ -39,30 +40,22 @@ export class RoundResultComponent implements OnInit {
 
   ngOnInit() {
   }
-  arrayFromMap(key: string, o: {[id: string]: {}}) {
-    const ret = [];
-    for (const k in o) {
-      if (!o[k]) { continue; }
-      const t = {...o};
-      t[key] = k;
-      ret.push(t);
-    }
-    return ret;
-  }
-  getResults(s, course): ScoreSummary[] {
+  getResults(s, course, users): ScoreSummary[] {
     const ret = [];
     for (const k in s) {
-      if (!s[k]) { continue; }
+      if (!s[k] || !users[k]) { continue; }
       ret.push({
         uid: k,
-        ...this.getResultFromScore(s[k], course)
+        name: users[k].name,
+        uhandicap: users[k].handicap,
+        ...this.getResultFromScore(s[k], course, users[k].handicap)
       });
     }
     return ret;
   }
-  getResultFromScore(s, course: Course) {
+  getResultFromScore(s, course: Course, hcp) {
     let brutto, netto, diff;
-    const vg = -this.getSpielvorgabe(54, course.slope, course.cr, course.par);
+    const vg = -this.getSpielvorgabe(hcp, course.slope, course.cr, course.par);
     const sum = {brutto: 0, netto: 0, diff: 0, scorecard: []};
     for (const k in s) {
       if (!s[k]) { continue; }

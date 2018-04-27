@@ -9,7 +9,7 @@ import { Course } from '../models/course.model';
   styleUrls: ['./new-course.component.scss']
 })
 export class NewCourseComponent implements OnInit {
-  course: Course = {name: '', city: '', holes: 9, scorecard: this._getDefaultScorecard(9)};
+  course: Course = {name: '', city: '', holes: 9, cr: 72, slope: 113, par: 72, scorecard: this._getDefaultScorecard(9)};
   holesIter: any[] = new Array(9);
   maxholes = 9
   constructor(private store: Store) { }

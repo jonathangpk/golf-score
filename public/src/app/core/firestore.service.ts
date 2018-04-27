@@ -1,11 +1,10 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Store } from '@ngxs/store';
 import { AddCoursesState, RemoveCourseState } from '../shell/store/course.actions';
-import { ChangeUserInfo } from '../shell/store/user.actions';
 import { Subscription } from 'rxjs/Subscription';
-import { AddRound, ChangeScore, DeleteRound } from '../shell/store/round.actions';
+import { AddRound, ChangeRoundUserInfo, ChangeScore, ChangeUserInfo, DeleteRound } from '../shell/store/round.actions';
 import { Round } from '../shell/models/round.model';
 
 
@@ -62,12 +61,12 @@ export class FirestoreService {
         })
     );
   }
-  queryUser(uid) {
+  /*queryUser(uid) {
     this.userSubs[uid] = this.fs.doc(`users/${uid}`).valueChanges()
       .subscribe(doc => {
         console.log('query user uid', doc);
       });
-  }
+  }*/
   queryRounds() {
     const uid = this.afAuth.auth.currentUser.uid;
     this.subs.push(
@@ -91,11 +90,9 @@ export class FirestoreService {
           if (r === null) {
             this.store.dispatch(new DeleteRound({id: rid}));
           } else {
-            r.users
-              .filter(id => id !== uid)
-              .forEach(id => this.queryUser(id));
             this.store.dispatch(new AddRound({id: rid, ...r}));
             this.queryScores(rid);
+            this.queryUsersFromRound(rid);
           }
         });
     } else {
@@ -106,13 +103,30 @@ export class FirestoreService {
     if (!rid) { return; }
     this.scoreSubs[rid] = this.fs.collection(`rounds/${rid}/scores`).stateChanges()
       .subscribe(r => {
-      r.forEach(s => {
-        this.store.dispatch(new ChangeScore({
-          rid: rid,
-          uid: s.payload.doc.id,
-          score: s.payload.doc.data()
-        }));
+        r.forEach(s => {
+          this.store.dispatch(new ChangeScore({
+            rid: rid,
+            uid: s.payload.doc.id,
+            score: s.payload.doc.data()
+          }));
+        });
       });
-    });
+  }
+  queryUsersFromRound(rid) {
+    if (!rid) {return; }
+    this.userSubs[rid] = this.fs.collection(`rounds/${rid}/users`).stateChanges()
+      .subscribe(r => {
+        r.forEach(e => {
+          this.store.dispatch(new ChangeRoundUserInfo({
+            rid: rid,
+            uid: e.payload.doc.id,
+            user: {
+              name: e.payload.doc.data().name,
+              handicap: e.payload.doc.data().handicap
+            }
+          }));
+        });
+      });
+
   }
 }

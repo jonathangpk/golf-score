@@ -1,12 +1,12 @@
 import { Round, Score } from '../models/round.model';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
-  AddRound,
-  ChangeScore,
+  AddRound, ChangeRoundUserInfo,
+  ChangeScore, ChangeUserInfo,
   DeleteRound,
   SetCurrentRound,
   TryAddRound,
-  TryChangeScore,
+  TryChangeScore, TryChangeUserInfo,
   TryCreateRound,
   TryDeleteRound
 } from './round.actions';
@@ -17,11 +17,16 @@ import firebase from '@firebase/app';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 
-
+export interface UserModel {
+  name: string;
+  handicap: number;
+}
 export interface RoundStateModel {
   rounds: Round[];
   currentRound: string;
   scores: {[rid: string]: {[uid: string]: Score}};
+  user: UserModel;
+  users: {[rid: string]: {[uid: string]: UserModel}};
 }
 
 @State<RoundStateModel>({
@@ -29,7 +34,9 @@ export interface RoundStateModel {
   defaults: {
     rounds: [],
     currentRound: '',
-    scores: {}
+    scores: {},
+    user: {name: 'Gast', handicap: 54},
+    users: {}
   }
 })
 export class RoundState {
@@ -57,11 +64,13 @@ export class RoundState {
     );
   }
   @Action(TryAddRound)
-  tryAddRound({}: StateContext<RoundStateModel>, { payload }: TryAddRound) {
+  tryAddRound({ getState }: StateContext<RoundStateModel>, { payload }: TryAddRound) {
     const uid = this.afAuth.auth.currentUser.uid;
     return Observable.fromPromise(
       this.fs.doc(`rounds/${payload.id}/users/${uid}`).set({
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        name: getState().user.name,
+        handicap: getState().user.handicap
       }).then(r => {
         return this.fs.doc(`users/${uid}/rounds/${payload.id}`).set({
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -116,10 +125,39 @@ export class RoundState {
   }
   @Action(ChangeScore)
   changeScore({ getState, patchState }: StateContext<RoundStateModel>, { payload }: ChangeScore) {
-    const scores = {...getState().scores}
+    const scores = {...getState().scores};
     if (!scores[payload.rid]) { scores[payload.rid] = {}; }
     scores[payload.rid][payload.uid] = payload.score;
     patchState({scores});
+  }
+  /*
+      USER STATE
+   */
+  @Action(TryChangeUserInfo)
+  tryChangeUserInfo({ patchState }: StateContext<RoundStateModel>, { payload }: TryChangeUserInfo) {
+    const uid = this.afAuth.auth.currentUser.uid;
+    return Observable.fromPromise(
+      this.fs.doc(`users/${uid}`).set(payload)
+    );
+  }
+  @Action(ChangeUserInfo)
+  changeUserInfo({ patchState }: StateContext<RoundStateModel>, { payload }: ChangeUserInfo) {
+    patchState({
+      user: {
+        ...payload
+      }
+    });
+  }
+  @Action(ChangeRoundUserInfo)
+  changeRoundUserInfo({ getState, patchState }: StateContext<RoundStateModel>, { payload }: ChangeRoundUserInfo) {
+    const users = getState().users;
+    if (!users[payload.rid]) { users[payload.rid] = {}; }
+    users[payload.rid][payload.uid] = payload.user;
+    patchState({users});
+  }
+  @Selector()
+  static localUser(state: RoundStateModel) {
+    return state.user;
   }
 
   @Selector()
@@ -130,6 +168,14 @@ export class RoundState {
   static currentScores(state: RoundStateModel) {
     if (state.currentRound) {
       return state.scores[state.currentRound] ? state.scores[state.currentRound] : {};
+    } else {
+      return {};
+    }
+  }
+  @Selector()
+  static currentUsers(state: RoundStateModel) {
+    if (state.currentRound && state.users[state.currentRound]) {
+      return state.users[state.currentRound];
     } else {
       return {};
     }
