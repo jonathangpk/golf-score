@@ -19,35 +19,36 @@ export class RoundScorecardComponent implements OnInit {
   roundid: string;
   @Select(state => state.course.courses) courses$: Observable<{[id: string]: Course}>;
   @Select(RoundState.currentRound) round$: Observable<Round>;
-  scorecard$ = Observable.combineLatest(this.courses$, this.round$, (courses, round) => {
+  @Select(RoundState.currentScores) scores$: Observable<any>;
+  scorecard$ = Observable.combineLatest(this.courses$, this.round$, this.scores$);
+  constructor(private afAuth: AngularFireAuth, private sb: MatSnackBar, private store: Store) {
+    this.round$.subscribe(r => console.log(r));
+    this.scorecard$.subscribe(([courses, round, scores]) => {
       if (round) {
         const course = courses[round.course];
         if (!course) {
           this.sb.open('Plätze sind noch nicht geladen', '', {duration: 2000});
-          return [];
-        }
-        this.roundid = round.id;
-        const scorecard = round.scores ? round.scores[this.afAuth.auth.currentUser.uid] : {};
-        const ret = [];
-        for (let i = 0; i < course.holes; i++) {
-          ret[i] = {};
-          if (scorecard[i]) {
-            ret[i].score = scorecard[i];
-          } else {
-            ret[i].score = course.scorecard[i].par;
+          this.scorecard = [];
+        } else {
+          this.roundid = round.id;
+          const uid = this.afAuth.auth.currentUser.uid;
+          const scorecard = scores[uid] ? scores[uid] : {};
+          const ret = [];
+          for (let i = 0; i < course.holes; i++) {
+            ret[i] = {};
+            if (scorecard[i]) {
+              ret[i].score = scorecard[i];
+            } else {
+              ret[i].score = course.scorecard[i].par;
+            }
+            ret[i].par = course.scorecard[i].par;
+            ret[i].dis = course.scorecard[i].dis;
           }
-          ret[i].par = course.scorecard[i].par;
-          ret[i].dis = course.scorecard[i].dis;
+          this.scorecard = ret;
         }
-        return ret;
       } else {
-        return [];
+        this.scorecard = [];
       }
-    });
-  constructor(private afAuth: AngularFireAuth, private sb: MatSnackBar, private store: Store) {
-    this.round$.subscribe(r => console.log(r));
-    this.scorecard$.subscribe(r => {
-      this.scorecard = r;
     });
   }
 

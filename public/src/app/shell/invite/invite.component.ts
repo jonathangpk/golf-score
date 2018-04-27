@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngxs/store';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { TryAddRound } from '../store/round.actions';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class InviteComponent implements OnDestroy {
     this.routeSub = this.route.paramMap
       .subscribe((params: ParamMap) => {
         console.log(params.get('id'));
-        //this.store.dispatch(new SetCurrentRound({id: params.get('id')}));
+        this.store.dispatch(new TryAddRound({id: params.get('id')}));
       });
   }
   ngOnDestroy() {

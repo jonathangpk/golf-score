@@ -1,4 +1,4 @@
-import { Round } from '../models/round.model';
+import { Round, Score } from '../models/round.model';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   AddRound,
@@ -21,13 +21,15 @@ import { Router } from '@angular/router';
 export interface RoundStateModel {
   rounds: Round[];
   currentRound: string;
+  scores: {[rid: string]: {[uid: string]: Score}};
 }
 
 @State<RoundStateModel>({
   name: 'round',
   defaults: {
     rounds: [],
-    currentRound: ''
+    currentRound: '',
+    scores: {}
   }
 })
 export class RoundState {
@@ -114,17 +116,22 @@ export class RoundState {
   }
   @Action(ChangeScore)
   changeScore({ getState, patchState }: StateContext<RoundStateModel>, { payload }: ChangeScore) {
-    const r = getState().rounds;
-    const e = r.find(a => a.id === payload.rid);
-    if (!e.scores) { e.scores = {}; }
-    e.scores[payload.uid] = payload.score;
-    patchState({
-      rounds: r
-    });
+    const scores = {...getState().scores}
+    if (!scores[payload.rid]) { scores[payload.rid] = {}; }
+    scores[payload.rid][payload.uid] = payload.score;
+    patchState({scores});
   }
 
   @Selector()
   static currentRound(state: RoundStateModel) {
     return state.rounds.filter(e => e.id === state.currentRound)[0];
+  }
+  @Selector()
+  static currentScores(state: RoundStateModel) {
+    if (state.currentRound) {
+      return state.scores[state.currentRound] ? state.scores[state.currentRound] : {};
+    } else {
+      return {};
+    }
   }
 }
