@@ -9,6 +9,7 @@ import { HomeComponent } from '../shell/home/home.component';
 import { NewCourseComponent } from '../shell/new-course/new-course.component';
 import { ProfileComponent } from '../shell/profile/profile.component';
 import { RoundDetailComponent } from '../shell/round-detail/round-detail.component';
+import { InviteComponent } from '../shell/invite/invite.component';
 
 export const appRoutes = [
   { path: 'login', component: LoginComponent },
@@ -22,7 +23,8 @@ export const appRoutes = [
       { path: 'round/new', component: NewRoundComponent },
       { path: 'round/:id', component: RoundDetailComponent },
       { path: 'course/new', component: NewCourseComponent },
-      { path: 'profile', component: ProfileComponent }
+      { path: 'profile', component: ProfileComponent },
+      { path: 'invite/:id', component: InviteComponent }
     ]
   },
   { path: '**', redirectTo: ''}

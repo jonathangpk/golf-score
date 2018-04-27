@@ -1,16 +1,21 @@
 <mat-card>
   <mat-card-title>Neue Spielrunde hinzufügen</mat-card-title>
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Benenne deine Runde" #name>
-  </mat-form-field>
-  <mat-form-field class="example-full-width">
-    <input type="text" placeholder="Wähle deinen Platz aus" (keyup)="onCourseInputChange(course.value)" aria-label="Number" matInput [matAutocomplete]="auto" #course>
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let c of filteredCourses" [value]="c.id">
-        {{ c.name }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <p>Platz nicht dabei? <a routerLink="/course/new">erstelle einen Platz</a></p>
-  <button mat-raised-button color="primary" (click)="onCreateRound(name.value, course.value)">Erstellen</button>
+  <form (ngSubmit)="onCreateRound(name.value)" #roundForm="ngForm">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Benenne deine Runde" #name required name="name">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input type="text" placeholder="Wähle deinen Platz aus"
+             required (keyup)="onCourseInputChange(course.value)"
+             aria-label="Number" matInput [matAutocomplete]="auto"
+             name="course">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCourseName" (optionSelected)="onSelectedCourse($event)">
+        <mat-option *ngFor="let c of filteredCourses" [value]="c">
+          {{ c.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <p>Platz nicht dabei? <a routerLink="/course/new">erstelle einen Platz</a></p>
+    <button type="submit" mat-raised-button color="primary" [disabled]="!roundForm.form.valid">Erstellen</button>
+  </form>
 </mat-card>

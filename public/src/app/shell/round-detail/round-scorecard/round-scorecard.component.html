@@ -1,0 +1,18 @@
+
+<div class="scorecard">
+  <div class="label">Loch</div>
+  <div class="label">Distanz</div>
+  <div class="label">Par</div>
+  <div class="label">Schläge</div>
+  <ng-container *ngFor="let h of scorecard; index as i">
+    <div class="cell">{{ i+1 }}</div>
+    <div class="cell">{{ h.dis }}</div>
+    <div class="cell">{{ h.par }}</div>
+    <div class="cell  score-input">
+      <button mat-icon-button (click)="h.score = h.score - 1"><mat-icon>remove</mat-icon></button>
+      <div class="score">{{ h.score }}</div>
+      <button mat-icon-button (click)="h.score = h.score + 1"><mat-icon>add</mat-icon></button>
+    </div>
+  </ng-container>
+</div>
+<button mat-raised-button color="primary" (click)="onSafeScorecard()">Speichern</button>

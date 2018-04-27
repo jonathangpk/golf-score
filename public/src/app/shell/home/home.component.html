@@ -2,7 +2,7 @@
   <mat-card-title>{{ r.name }}</mat-card-title>
   <mat-card-subtitle>{{ r.course }}</mat-card-subtitle>
 </mat-card>
-<mat-card>Du hast noch keine Runde erstellt. <br> <a routerLink="/round/new">Eine Runde erstellen</a></mat-card>
+<mat-card *ngIf="(rounds$ | async)?.length === 0">Du hast noch keine Runde erstellt. <br> <a routerLink="/round/new">Eine Runde erstellen</a></mat-card>
 
 <button mat-fab color="primary" routerLink="/round/new"
         style="position: absolute; bottom: 14px;right: 14px;"

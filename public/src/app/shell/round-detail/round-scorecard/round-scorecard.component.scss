@@ -1,0 +1,17 @@
+.scorecard {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 22%) 34%;
+  align-items: center;
+  text-align: center;
+}
+.label {
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #555;
+}
+.score-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}

@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { AddCoursesState, RemoveCourseState } from '../shell/store/course.actions';
 import { ChangeUserInfo } from '../shell/store/user.actions';
 import { Subscription } from 'rxjs/Subscription';
-import { AddRound } from '../shell/store/round.actions';
+import { AddRound, ChangeScore, DeleteRound } from '../shell/store/round.actions';
 import { Round } from '../shell/models/round.model';
 
 
@@ -14,8 +14,8 @@ export class FirestoreService {
   subs: Subscription[] = [];
   userSubs: {[id: string]: Subscription} = {};
   roundSubs: {[id: string]: Subscription} = {};
+  scoreSubs: {[id: string]: Subscription} = {};
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private store: Store) {
-    console.log('service');
   }
   queryAll() {
     this.queryCourses();
@@ -26,14 +26,13 @@ export class FirestoreService {
     console.log('Firestore ngOnDestroy');
     this.subs.forEach(s => s.unsubscribe());
     for (const k in this.userSubs) {
-      if (this.userSubs[k]) {
-        this.userSubs[k].unsubscribe();
-      }
+      if (this.userSubs[k]) { this.userSubs[k].unsubscribe(); }
     }
     for (const k in this.roundSubs) {
-      if (this.roundSubs[k]) {
-        this.roundSubs[k].unsubscribe();
-      }
+      if (this.roundSubs[k]) { this.roundSubs[k].unsubscribe(); }
+    }
+    for (const k in this.scoreSubs) {
+      if (this.scoreSubs[k]) { this.scoreSubs[k].unsubscribe(); }
     }
   }
   queryCourses() {
@@ -48,7 +47,6 @@ export class FirestoreService {
               n[e.payload.doc.id] = e.payload.doc.data();
             }
           });
-          console.log(n);
           this.store.dispatch(new AddCoursesState(n));
         })
     );
@@ -59,7 +57,6 @@ export class FirestoreService {
       this.fs.doc(`users/${uid}`).valueChanges()
         .subscribe((doc: {name: string, handicap: number}) => {
           if (doc) {
-            console.log(doc);
             this.store.dispatch(new ChangeUserInfo(doc));
           }
         })
@@ -77,7 +74,12 @@ export class FirestoreService {
       this.fs.collection(`users/${uid}/rounds`).stateChanges()
         .subscribe(r => {
           r.forEach(e => {
-            this.queryRound(uid, e.payload.doc.id);
+            if (e.payload.type === 'removed') {
+              this.roundSubs[e.payload.doc.id].unsubscribe();
+              this.store.dispatch(new DeleteRound({id: e.payload.doc.id}));
+            } else {
+              this.queryRound(uid, e.payload.doc.id);
+            }
           });
         })
     );
@@ -87,16 +89,30 @@ export class FirestoreService {
       this.roundSubs[rid] = this.fs.doc(`rounds/${rid}`).valueChanges()
         .subscribe((r: Round) => {
           if (r === null) {
-            // deleted
+            this.store.dispatch(new DeleteRound({id: rid}));
           } else {
             r.users
               .filter(id => id !== uid)
               .forEach(id => this.queryUser(id));
             this.store.dispatch(new AddRound({id: rid, ...r}));
+            this.queryScores(rid);
           }
         });
     } else {
       console.log('err');
     }
+  }
+  queryScores(rid) {
+    if (!rid) { return; }
+    this.scoreSubs[rid] = this.fs.collection(`rounds/${rid}/scores`).stateChanges()
+      .subscribe(r => {
+      r.forEach(s => {
+        this.store.dispatch(new ChangeScore({
+          rid: rid,
+          uid: s.payload.doc.id,
+          score: s.payload.doc.data()
+        }));
+      });
+    });
   }
 }

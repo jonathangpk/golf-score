@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
@@ -10,7 +10,8 @@ import { Round } from '../models/round.model';
 @Component({
   selector: 'app-round-detail',
   templateUrl: './round-detail.component.html',
-  styleUrls: ['./round-detail.component.scss']
+  styleUrls: ['./round-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoundDetailComponent implements OnInit, OnDestroy {
   @Select(RoundState.currentRound) round$: Observable<Round>;

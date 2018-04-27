@@ -6,6 +6,7 @@ export interface Course {
     [hole: number]: {
       par: number;
       handicap: number;
+      dis: number;
     }
   };
 }
