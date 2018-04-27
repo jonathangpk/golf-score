@@ -22,7 +22,6 @@ export class RoundScorecardComponent implements OnInit {
   @Select(RoundState.currentScores) scores$: Observable<any>;
   scorecard$ = Observable.combineLatest(this.courses$, this.round$, this.scores$);
   constructor(private afAuth: AngularFireAuth, private sb: MatSnackBar, private store: Store) {
-    this.round$.subscribe(r => console.log(r));
     this.scorecard$.subscribe(([courses, round, scores]) => {
       if (round) {
         const course = courses[round.course];

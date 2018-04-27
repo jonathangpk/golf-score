@@ -8,7 +8,7 @@ export interface Course {
   scorecard: {
     [hole: number]: {
       par: number;
-      handicap: number;
+      hcp: number;
       dis: number;
     }
   };

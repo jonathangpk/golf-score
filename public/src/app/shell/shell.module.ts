@@ -27,6 +27,7 @@ import { FormsModule } from '@angular/forms';
 import { InviteComponent } from './invite/invite.component';
 import { RoundSettingsComponent } from './round-detail/round-settings/round-settings.component';
 import { RoundScorecardComponent } from './round-detail/round-scorecard/round-scorecard.component';
+import { RoundResultComponent } from './round-detail/round-result/round-result.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { RoundScorecardComponent } from './round-detail/round-scorecard/round-sc
     RoundDetailComponent,
     InviteComponent,
     RoundSettingsComponent,
-    RoundScorecardComponent
+    RoundScorecardComponent,
+    RoundResultComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,12 @@
+<div class="standings">
+  <div>Name</div>
+  <div>Netto</div>
+  <div>Brutto</div>
+  <div>±</div>
+  <ng-container *ngFor="let u of summary">
+    <div class="cell">{{u.uid}}</div>
+    <div class="cell">{{u.netto}}</div>
+    <div class="cell">{{u.brutto}}</div>
+    <div class="cell">{{u.diff}}</div>
+  </ng-container>
+</div>
