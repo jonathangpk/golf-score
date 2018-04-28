@@ -16,6 +16,8 @@ import { AuthState } from './auth/store/auth.state';
 import { NgxsModule } from '@ngxs/store';
 import { AuthGuard } from './core/auth.guard';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { CourseState } from './shell/store/course.state';
+import { RoundState } from './shell/store/round.state';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
     MatSnackBarModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     NgxsModule.forRoot([
-      AuthState
+      AuthState,
+      CourseState,
+      RoundState
     ]),
     environment.production ? [] : NgxsReduxDevtoolsPluginModule.forRoot()
   ],

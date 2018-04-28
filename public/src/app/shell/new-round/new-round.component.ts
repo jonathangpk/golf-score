@@ -9,8 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   selector: 'app-new-round',
   templateUrl: './new-round.component.html',
-  styleUrls: ['./new-round.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./new-round.component.scss']
 })
 export class NewRoundComponent implements OnInit, OnDestroy {
   @Select(CourseState.coursesArray) courses$: Observable<Course[]>;

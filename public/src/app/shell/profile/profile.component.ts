@@ -8,8 +8,7 @@ import { RoundState, UserModel } from '../store/round.state';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
   @Select(RoundState.localUser) user$: Observable<UserModel>;

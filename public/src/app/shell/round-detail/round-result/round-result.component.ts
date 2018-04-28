@@ -1,43 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Select } from '@ngxs/store';
-import { RoundState, UserModel } from '../../store/round.state';
+import { RoundState, ScoreSummary, UserModel } from '../../store/round.state';
 import { Course } from '../../models/course.model';
 import { Observable } from 'rxjs/Observable';
 import { MatSnackBar } from '@angular/material';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Round } from '../../models/round.model';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-round-result',
   templateUrl: './round-result.component.html',
   styleUrls: ['./round-result.component.scss']
 })
-export class RoundResultComponent implements OnInit {
-  standings = [];
-  summary = [];
-  userSummary;
+export class RoundResultComponent implements OnInit, OnDestroy {
+  sub: Subscription;
   @Select(state => state.course.courses) courses$: Observable<Course>;
   @Select(RoundState.currentRound) round$: Observable<Round>;
   @Select(RoundState.currentScores) scores$: Observable<{[id: string]: number}>;
-  @Select(RoundState.currentUsers) users$: Observable<{[id: string]: UserModel}>
-  combined$ = Observable.combineLatest(this.courses$, this.round$, this.scores$, this.users$);
-  constructor(private sb: MatSnackBar, private afAuth: AngularFireAuth) {
-    this.combined$.subscribe(([courses, round, scores, users]) => {
+  @Select(RoundState.currentUsers) users$: Observable<{[id: string]: UserModel}>;
+  summary$ = Observable.combineLatest(this.courses$, this.round$, this.scores$, this.users$,
+    (courses, round, scores, users) => {
       if (round) {
         const course = courses[round.course];
         if (!course || !scores) {
           this.sb.open('Noch nicht alle daten geladen', '', {duration: 2000});
-          return;
+          return [];
         }
         const results = this.getResults(scores, course, users);
         console.log(results);
-        this.userSummary = results.find(e => e.uid === this.afAuth.auth.currentUser.uid);
-        this.summary = results
+        // this.userSummary = results.find(e => e.uid === this.afAuth.auth.currentUser.uid);
+        return results
           .sort((a, b) => a.brutto - b.brutto);
-      } else { this.summary = this.standings = []; }
-    });
+      } else { return []; }
+  });
+  constructor(private sb: MatSnackBar, private afAuth: AngularFireAuth) {
+    this.sub = this.scores$.subscribe(e => {console.log('scores', e); });
   }
-
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
   ngOnInit() {
   }
   getResults(s, course, users): ScoreSummary[] {
@@ -61,7 +63,6 @@ export class RoundResultComponent implements OnInit {
       if (!s[k]) { continue; }
       brutto = Math.max(0, course.scorecard[k].par - s[k] + 2);
       const vor = Math.floor(vg / 18) + ((course.scorecard[k].hcp <= vg % 18) ? 1 : 0);
-      console.log(vor);
       netto = Math.max(0, vor + course.scorecard[k].par - s[k] + 2);
       diff = s[k] - course.scorecard[k].par;
       sum.brutto += brutto;
@@ -72,7 +73,6 @@ export class RoundResultComponent implements OnInit {
     return sum;
   }
   getSpielvorgabe (hcp: number, slope: number, cr: number, par: number) {
-    console.log(hcp, slope, cr, par);
     return Math.round(Math.max(-hcp, -36) * (slope / 113) - cr + par);
   }
   getNettoPunkte(course: Course, s, handicap) {
@@ -88,17 +88,4 @@ export class RoundResultComponent implements OnInit {
     return {};
   }
 
-}
-interface ScoreSummary {
-  uid: string;
-  brutto: number;
-  netto: number;
-  diff: number;
-  scorecard: {
-    hole: number;
-    brutto: number;
-    netto: number;
-    par: number;
-    score: number
-  }[];
 }

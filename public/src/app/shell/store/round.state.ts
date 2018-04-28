@@ -16,7 +16,21 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import firebase from '@firebase/app';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { Course } from '../models/course.model';
 
+export interface ScoreSummary {
+  uid: string;
+  brutto: number;
+  netto: number;
+  diff: number;
+  scorecard: {
+    hole: number;
+    brutto: number;
+    netto: number;
+    par: number;
+    score: number
+  }[];
+}
 export interface UserModel {
   name: string;
   handicap: number;
@@ -27,8 +41,33 @@ export interface RoundStateModel {
   scores: {[rid: string]: {[uid: string]: Score}};
   user: UserModel;
   users: {[rid: string]: {[uid: string]: UserModel}};
+  courses: {[cid: string]: Course};
 }
-
+const c: Course = {
+    city: 'Germering',
+    cr: 64.9,
+    holes: 3,
+    par: 66,
+    slope: 117,
+    name: 'Germering Ost',
+    scorecard: {
+      0: {
+        par: 3,
+        dis: 113,
+        hcp: 3
+      },
+      1: {
+        par: 4,
+        dis: 113,
+        hcp: 1
+      },
+      2: {
+        par: 5,
+        dis: 113,
+        hcp: 2
+      }
+    }
+};
 @State<RoundStateModel>({
   name: 'round',
   defaults: {
@@ -36,11 +75,37 @@ export interface RoundStateModel {
     currentRound: '',
     scores: {},
     user: {name: 'Gast', handicap: 54},
-    users: {}
+    users: {},
+    courses: {'SsR6GZqIfxCv1psZLbrU': c}
   }
 })
 export class RoundState {
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private sb: MatSnackBar, private router: Router) {
+  }
+  @Selector()
+  static localUser(state: RoundStateModel) {
+    return state.user;
+  }
+
+  @Selector()
+  static currentRound(state: RoundStateModel) {
+    return state.rounds.filter(e => e.id === state.currentRound)[0];
+  }
+  @Selector()
+  static currentScores(state: RoundStateModel) {
+    if (state.currentRound && state.scores[state.currentRound]) {
+      return state.scores[state.currentRound];
+    } else {
+      return {};
+    }
+  }
+  @Selector()
+  static currentUsers(state: RoundStateModel) {
+    if (state.currentRound && state.users[state.currentRound]) {
+      return state.users[state.currentRound];
+    } else {
+      return {};
+    }
   }
   @Action(SetCurrentRound)
   setCurrentRound({ patchState }: StateContext<RoundStateModel>, { payload }: SetCurrentRound) {
@@ -125,9 +190,11 @@ export class RoundState {
   }
   @Action(ChangeScore)
   changeScore({ getState, patchState }: StateContext<RoundStateModel>, { payload }: ChangeScore) {
-    const scores = {...getState().scores};
+    const scores = getState().scores;
     if (!scores[payload.rid]) { scores[payload.rid] = {}; }
-    scores[payload.rid][payload.uid] = payload.score;
+    const sr = {...scores[payload.rid]};
+    sr[payload.uid] = payload.score;
+    scores[payload.rid] = sr;
     patchState({scores});
   }
   /*
@@ -152,32 +219,64 @@ export class RoundState {
   changeRoundUserInfo({ getState, patchState }: StateContext<RoundStateModel>, { payload }: ChangeRoundUserInfo) {
     const users = getState().users;
     if (!users[payload.rid]) { users[payload.rid] = {}; }
-    users[payload.rid][payload.uid] = payload.user;
+    const ur = {...users[payload.rid]};
+    ur[payload.uid] = payload.user;
+    users[payload.rid] = ur;
     patchState({users});
   }
-  @Selector()
-  static localUser(state: RoundStateModel) {
-    return state.user;
-  }
+  /*@Selector()
+  static currentResult(state: RoundStateModel) {
+    return this.getResultsArray(state.courses, state.rounds[state.currentRound], state.scores, state.users[state.currentRound]);
+  }*/
 
-  @Selector()
-  static currentRound(state: RoundStateModel) {
-    return state.rounds.filter(e => e.id === state.currentRound)[0];
+  /*static getResultsArray(courses, round, scores, users) {
+    if (round) {
+      const course = courses[round.course];
+      if (!course || !scores || !users) {
+        // this.sb.open('Noch nicht alle daten geladen', '', {duration: 2000});
+        return [];
+      }
+      const results = this.getResults(scores, course, users);
+      console.log('res', results);
+      // this.userSummary = results.find(e => e.uid === this.afAuth.auth.currentUser.uid);
+      return results
+        .sort((a, b) => a.brutto - b.brutto);
+    } else { return []; }
   }
-  @Selector()
-  static currentScores(state: RoundStateModel) {
-    if (state.currentRound) {
-      return state.scores[state.currentRound] ? state.scores[state.currentRound] : {};
-    } else {
-      return {};
+  static getResults(s, course, users): ScoreSummary[] {
+    const ret = [];
+    for (const k in s) {
+      if (!s[k] || !users[k]) { continue; }
+      ret.push({
+        uid: k,
+        name: users[k].name,
+        uhandicap: users[k].handicap,
+        ...this.getResultFromScore(s[k], course, users[k].handicap)
+      });
     }
+    return ret;
   }
-  @Selector()
-  static currentUsers(state: RoundStateModel) {
-    if (state.currentRound && state.users[state.currentRound]) {
-      return state.users[state.currentRound];
-    } else {
-      return {};
+  static getResultFromScore(s, course: Course, hcp) {
+    let brutto, netto, diff;
+    const vg = -this.getSpielvorgabe(hcp, course.slope, course.cr, course.par);
+    const sum = {brutto: 0, netto: 0, diff: 0, scorecard: []};
+    for (const k in s) {
+      if (!s[k]) { continue; }
+      brutto = Math.max(0, course.scorecard[k].par - s[k] + 2);
+      const vor = Math.floor(vg / 18) + ((course.scorecard[k].hcp <= vg % 18) ? 1 : 0);
+      console.log(vor);
+      netto = Math.max(0, vor + course.scorecard[k].par - s[k] + 2);
+      diff = s[k] - course.scorecard[k].par;
+      sum.brutto += brutto;
+      sum.netto += netto;
+      sum.diff += diff;
+      sum.scorecard.push({brutto, netto, score: s[k], par: course.scorecard[k].par, hole: k});
     }
+    return sum;
   }
+  static getSpielvorgabe (hcp: number, slope: number, cr: number, par: number) {
+    console.log(hcp, slope, cr, par);
+    return Math.round(Math.max(-hcp, -36) * (slope / 113) - cr + par);
+  }*/
 }
+

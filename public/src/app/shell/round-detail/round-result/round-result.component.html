@@ -3,7 +3,7 @@
   <div>Netto</div>
   <div>Brutto</div>
   <div>±</div>
-  <ng-container *ngFor="let u of summary">
+  <ng-container *ngFor="let u of summary$ | async">
     <div class="cell">{{u.name}}</div>
     <div class="cell">{{u.netto}}</div>
     <div class="cell">{{u.brutto}}</div>

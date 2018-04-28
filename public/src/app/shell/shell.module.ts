@@ -16,9 +16,6 @@ import { RoutingModule } from '../core/routing.module';
 import { NewCourseComponent } from './new-course/new-course.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { NgxsModule } from '@ngxs/store';
-import { CourseState } from './store/course.state';
-import { RoundState } from './store/round.state';
 import { FirestoreService } from '../core/firestore.service';
 import { CommonModule } from '@angular/common';
 import { RoundDetailComponent } from './round-detail/round-detail.component';
@@ -54,10 +51,6 @@ import { RoundResultComponent } from './round-detail/round-result/round-result.c
     MatTabsModule,
     MatAutocompleteModule,
     AngularFirestoreModule.enablePersistence(),
-    NgxsModule.forFeature([
-      CourseState,
-      RoundState
-    ])
   ],
   providers: [
     FirestoreService

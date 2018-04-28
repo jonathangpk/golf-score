@@ -21,6 +21,17 @@ export interface CourseStateModel {
 })
 export class CourseState {
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth) {}
+  @Selector()
+  static coursesArray(state: CourseStateModel) {
+    const n = [];
+    const c = state.courses;
+    for (const id in c) {
+      if (c[id]) {
+        n.push({id, ...c[id]});
+      }
+    }
+    return n;
+  }
   @Action(CreateCourse)
   addCoursesToState({ }: StateContext<CourseStateModel>, { payload }: CreateCourse) {
     const uid = this.afAuth.auth.currentUser.uid;
@@ -43,15 +54,5 @@ export class CourseState {
       }
     });
   }
-  @Selector()
-  static coursesArray(state: CourseStateModel) {
-    const n = [];
-    const c = state.courses;
-    for (const id in c) {
-      if (c[id]) {
-        n.push({id, ...c[id]});
-      }
-    }
-    return n;
-  }
+
 }

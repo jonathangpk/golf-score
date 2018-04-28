@@ -10,8 +10,7 @@ import { Round } from '../models/round.model';
 @Component({
   selector: 'app-round-detail',
   templateUrl: './round-detail.component.html',
-  styleUrls: ['./round-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./round-detail.component.scss']
 })
 export class RoundDetailComponent implements OnInit, OnDestroy {
   @Select(RoundState.currentRound) round$: Observable<Round>;
