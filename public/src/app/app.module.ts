@@ -18,6 +18,7 @@ import { AuthGuard } from './core/auth.guard';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { CourseState } from './shell/store/course.state';
 import { RoundState } from './shell/store/round.state';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { RoundState } from './shell/store/round.state';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production}),
     RoutingModule,
     ShellModule,
     MatButtonModule,

@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Round } from '../../models/round.model';
 import { Subscription } from 'rxjs/Subscription';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-round-result',
@@ -17,6 +18,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
   summary: ScoreSummary[] = [];
   scorecard: ScoreSummary = null;
   sub: Subscription;
+  roundId: string;
   @Select(state => state.course.courses) courses$: Observable<Course>;
   @Select(RoundState.currentRound) round$: Observable<Round>;
   @Select(RoundState.currentScores) scores$: Observable<{[id: string]: number}>;
@@ -24,6 +26,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
   summary$ = Observable.combineLatest(this.courses$, this.round$, this.scores$, this.users$,
     (courses, round, scores, users) => {
       if (round) {
+        this.roundId = round.id;
         const course = courses[round.course];
         if (!course || !scores) {
           this.sb.open('Noch nicht alle daten geladen', '', {duration: 2000});
@@ -44,6 +47,24 @@ export class RoundResultComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
   ngOnInit() {
+  }
+  getUrl() {
+    return this.roundId ? `${environment.targetUrl}/invite/${this.roundId}` : '';
+  }
+  onCopyUrl() {
+    const textarea = document.createElement('textarea');
+    textarea.textContent = this.getUrl();
+    textarea.style.position = 'fixed';  // Prevent scrolling to bottom of page in MS Edge.
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      return document.execCommand('copy');  // Security exception may be thrown by some browsers.
+    } catch (ex) {
+      console.warn('Copy to clipboard failed.', ex);
+      return false;
+    } finally {
+      document.body.removeChild(textarea);
+    }
   }
   getResults(s, course, users): ScoreSummary[] {
     const ret = [];

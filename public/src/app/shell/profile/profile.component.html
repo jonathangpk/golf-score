@@ -1,10 +1,12 @@
-<h1>Profil Einstellungen</h1>
-<mat-form-field>
-  <input matInput placeholder="Name" [value]="(user$ | async)?.name" #name>
-</mat-form-field>
-<mat-form-field>
-  <input matInput placeholder="Handicap" [value]="(user$ | async)?.handicap" type="number" #handicap>
-</mat-form-field>
-<button mat-raised-button="primary" (click)="onSafe(name.value, handicap.value)">Speichern</button>
-<button mat-raised-button color="accent" (click)="onLogout()">Ausloggen</button>
-<p>Wenn sie sich als Gast eingeloggt haben sind ihre gespeicherten Runden weg!<br>Bei ihren Mitspielen werden sie noch angezeigt</p>
+<mat-card>
+  <mat-card-title>Profil Einstellungen</mat-card-title>
+  <mat-form-field>
+    <input matInput placeholder="Name" [value]="(user$ | async)?.name" #name>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Handicap" [value]="(user$ | async)?.handicap" type="number" #handicap>
+  </mat-form-field>
+  <button mat-raised-button="primary" (click)="onSafe(name.value, handicap.value)">Speichern</button>
+  <button mat-raised-button color="accent" (click)="onLogout()">Ausloggen</button>
+  <p>Wenn sie sich als Gast eingeloggt haben und sich ausloggen, sind ihre gespeicherten Runden weg!<br>Bei ihren Mitspielen werden sie noch angezeigt</p>
+</mat-card>

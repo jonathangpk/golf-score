@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>Deine Auswertung</mat-card-title>
-  <div class="scorecard" *ngIf="scorecard">
+  <div class="scorecard" *ngIf="scorecard; else noScore">
     <div class="label">Loch</div>
     <div class="label">Par</div>
     <div class="label">Score</div>
@@ -22,8 +22,9 @@
     <div class="cell sum">{{scorecard.brutto}}</div>
     <div class="cell sum">{{scorecard.diff}}</div>
   </div>
+  <ng-template #noScore>Noch kein Ergebnis<br>Klicke Scorekarte um deinen Score einzutragen</ng-template>
 </mat-card>
-<mat-card *ngIf="(summary$ | async).length !== 0">
+<mat-card *ngIf="(summary$ | async).length > 1">
   <mat-card-title>Tunier Wertung</mat-card-title>
   <div class="standings">
     <div class="label left"></div>
@@ -39,4 +40,8 @@
       <div class="cell">{{u.diff}}</div>
     </ng-container>
   </div>
+</mat-card>
+<mat-card>
+  <mat-card-title>Lade Freunde ein</mat-card-title>
+  <div class="invite-link" (click)="onCopyUrl()"><mat-icon>content_copy</mat-icon>{{getUrl()}} </div>
 </mat-card>

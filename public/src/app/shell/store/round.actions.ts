@@ -48,3 +48,7 @@ export class ChangeRoundUserInfo {
   static readonly type = '[USER] Change Round User Info';
   constructor (public payload: {rid: string, uid: string, user: UserModel}) {}
 }
+export class TryChangeRoundUserInfo {
+  static readonly type = '[USER] TryChange Round User Info';
+  constructor (public payload: {rid: string, uid: string, user: UserModel}) {}
+}

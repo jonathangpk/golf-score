@@ -23,6 +23,7 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
+    "@angular/service-worker": "^5.2.10",
     "@firebase/app": "^0.1.10",
     "@ngxs/devtools-plugin": "2.0.0",
     "@ngxs/store": "2.0.0",

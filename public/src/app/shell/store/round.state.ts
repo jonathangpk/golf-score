@@ -5,7 +5,7 @@ import {
   ChangeScore, ChangeUserInfo,
   DeleteRound,
   SetCurrentRound,
-  TryAddRound,
+  TryAddRound, TryChangeRoundUserInfo,
   TryChangeScore, TryChangeUserInfo,
   TryCreateRound,
   TryDeleteRound
@@ -227,59 +227,17 @@ export class RoundState {
     users[payload.rid] = ur;
     patchState({users});
   }
-  /*@Selector()
-  static currentResult(state: RoundStateModel) {
-    return this.getResultsArray(state.courses, state.rounds[state.currentRound], state.scores, state.users[state.currentRound]);
-  }*/
-
-  /*static getResultsArray(courses, round, scores, users) {
-    if (round) {
-      const course = courses[round.course];
-      if (!course || !scores || !users) {
-        // this.sb.open('Noch nicht alle daten geladen', '', {duration: 2000});
-        return [];
-      }
-      const results = this.getResults(scores, course, users);
-      console.log('res', results);
-      // this.userSummary = results.find(e => e.uid === this.afAuth.auth.currentUser.uid);
-      return results
-        .sort((a, b) => a.brutto - b.brutto);
-    } else { return []; }
+  @Action(TryChangeRoundUserInfo)
+  tryChangeRoundUserInfo({ }: StateContext<RoundStateModel>, { payload }: TryChangeRoundUserInfo) {
+    return Observable.fromPromise(
+      this.fs.doc(`rounds/${payload.rid}/users/${payload.uid}`).set(payload.user)
+        .then(e => {
+          this.sb.open('Gespeichert', '', {duration: 700});
+        })
+        .catch(e => {
+          this.sb.open('Error: '+e, '', {duration: 700});
+        })
+    );
   }
-  static getResults(s, course, users): ScoreSummary[] {
-    const ret = [];
-    for (const k in s) {
-      if (!s[k] || !users[k]) { continue; }
-      ret.push({
-        uid: k,
-        name: users[k].name,
-        uhandicap: users[k].handicap,
-        ...this.getResultFromScore(s[k], course, users[k].handicap)
-      });
-    }
-    return ret;
-  }
-  static getResultFromScore(s, course: Course, hcp) {
-    let brutto, netto, diff;
-    const vg = -this.getSpielvorgabe(hcp, course.slope, course.cr, course.par);
-    const sum = {brutto: 0, netto: 0, diff: 0, scorecard: []};
-    for (const k in s) {
-      if (!s[k]) { continue; }
-      brutto = Math.max(0, course.scorecard[k].par - s[k] + 2);
-      const vor = Math.floor(vg / 18) + ((course.scorecard[k].hcp <= vg % 18) ? 1 : 0);
-      console.log(vor);
-      netto = Math.max(0, vor + course.scorecard[k].par - s[k] + 2);
-      diff = s[k] - course.scorecard[k].par;
-      sum.brutto += brutto;
-      sum.netto += netto;
-      sum.diff += diff;
-      sum.scorecard.push({brutto, netto, score: s[k], par: course.scorecard[k].par, hole: k});
-    }
-    return sum;
-  }
-  static getSpielvorgabe (hcp: number, slope: number, cr: number, par: number) {
-    console.log(hcp, slope, cr, par);
-    return Math.round(Math.max(-hcp, -36) * (slope / 113) - cr + par);
-  }*/
 }
 

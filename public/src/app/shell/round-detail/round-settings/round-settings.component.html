@@ -1,1 +1,16 @@
-<button mat-raised-button color="warn" (click)="onDeleteRound()">Runde Löschen</button>
+<mat-card>
+  <mat-card-title>Profileinstellungen für diese Runde</mat-card-title>
+  <form  #pForm="ngForm" (ngSubmit)="onChangeUserInfo()">
+    <mat-form-field>
+      <input matInput placeholder="Name" [(ngModel)]="user.name" name="name">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Handicap" [(ngModel)]="user.handicap" name="handicap">
+    </mat-form-field>
+    <button class="button-container" mat-raised-button color="primary" type="submit">Speichern</button>
+  </form>
+</mat-card>
+<mat-card>
+  <mat-card-title>Runden Einstellungen</mat-card-title>
+  <button class="button-container" mat-raised-button color="warn" (click)="onDeleteRound()">Runde Löschen</button>
+</mat-card>
