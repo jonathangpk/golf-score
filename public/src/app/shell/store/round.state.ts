@@ -3,7 +3,7 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   AddRound, ChangeRoundUserInfo,
   ChangeScore, ChangeUserInfo,
-  DeleteRound,
+  DeleteRound, ResetRoundState,
   SetCurrentRound,
   TryAddRound, TryChangeRoundUserInfo,
   TryChangeScore, TryChangeUserInfo,
@@ -41,46 +41,21 @@ export interface UserModel {
 export interface RoundStateModel {
   rounds: Round[];
   currentRound: string;
-  scores: {[rid: string]: {[uid: string]: Score}};
+  scores: { [rid: string]: { [uid: string]: Score } };
   user: UserModel;
-  users: {[rid: string]: {[uid: string]: UserModel}};
-  courses: {[cid: string]: Course};
+  users: { [rid: string]: { [uid: string]: UserModel } };
 }
-const c: Course = {
-    city: 'Germering',
-    cr: 64.9,
-    holes: 3,
-    par: 66,
-    slope: 117,
-    name: 'Germering Ost',
-    scorecard: {
-      0: {
-        par: 3,
-        dis: 113,
-        hcp: 3
-      },
-      1: {
-        par: 4,
-        dis: 113,
-        hcp: 1
-      },
-      2: {
-        par: 5,
-        dis: 113,
-        hcp: 2
-      }
-    }
-};
+const defaults = {
+  rounds: [],
+  currentRound: '',
+  scores: {},
+  user: {name: 'Gast', handicap: 54},
+  users: {}
+}
+// TODO Delete State after Logout
 @State<RoundStateModel>({
   name: 'round',
-  defaults: {
-    rounds: [],
-    currentRound: '',
-    scores: {},
-    user: {name: 'Gast', handicap: 54},
-    users: {},
-    courses: {'SsR6GZqIfxCv1psZLbrU': c}
-  }
+  defaults
 })
 export class RoundState {
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private sb: MatSnackBar, private router: Router) {
@@ -109,6 +84,10 @@ export class RoundState {
     } else {
       return {};
     }
+  }
+  @Action(ResetRoundState)
+  resetRoundState({ setState }: StateContext<RoundStateModel>) {
+
   }
   @Action(SetCurrentRound)
   setCurrentRound({ patchState }: StateContext<RoundStateModel>, { payload }: SetCurrentRound) {

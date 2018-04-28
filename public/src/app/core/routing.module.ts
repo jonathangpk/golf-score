@@ -10,10 +10,11 @@ import { NewCourseComponent } from '../shell/new-course/new-course.component';
 import { ProfileComponent } from '../shell/profile/profile.component';
 import { RoundDetailComponent } from '../shell/round-detail/round-detail.component';
 import { InviteComponent } from '../shell/invite/invite.component';
+import { LogedinGuard } from './logedin.guard';
 
 export const appRoutes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent, canActivate: [] },
+  { path: 'register', component: RegisterComponent, canActivate: [] },
   {
     path: '',
     canActivate: [AuthGuard],

@@ -28,13 +28,13 @@
   <mat-card-title>Tunier Wertung</mat-card-title>
   <div class="standings">
     <div class="label left"></div>
-    <div class="label left">Name</div>
+    <div class="label left name">Name</div>
     <div class="label">Netto</div>
     <div class="label">Brutto</div>
     <div class="label">±</div>
     <ng-container *ngFor="let u of summary$ | async; index as i">
       <div class="cell left">{{i+1}}.</div>
-      <div class="cell left">{{u.name}}</div>
+      <div class="cell left name">{{u.name}}</div>
       <div class="cell">{{u.netto}}</div>
       <div class="cell">{{u.brutto}}</div>
       <div class="cell">{{u.diff}}</div>
@@ -43,5 +43,5 @@
 </mat-card>
 <mat-card>
   <mat-card-title>Lade Freunde ein</mat-card-title>
-  <div class="invite-link" (click)="onCopyUrl()"><mat-icon>content_copy</mat-icon>{{getUrl()}} </div>
+  <div class="invite-link break-word" (click)="onCopyUrl()"><mat-icon>content_copy</mat-icon>{{getUrl()}} </div>
 </mat-card>

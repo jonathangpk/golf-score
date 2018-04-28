@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { User } from 'firebase';
 import { FirestoreService } from '../../core/firestore.service';
-import { ChangeUserInfo } from '../../shell/store/round.actions';
+import { ChangeUserInfo, ResetRoundState } from '../../shell/store/round.actions';
 
 export interface AuthStateModel {
   uid: string;
@@ -72,11 +72,13 @@ export class AuthState {
   }
 
   @Action(Logout)
-  logout({ }: StateContext<AuthStateModel>) {
+  logout({ dispatch }: StateContext<AuthStateModel>) {
     this.fss.unsubscribeAll();
     return Observable.fromPromise(
-      this.afAuth.auth.signOut())
+      this.afAuth.auth.signOut()
+    )
       .pipe(tap(() => {
+        dispatch(new ResetRoundState())
         this.router.navigate(['/login']);
       }));
   }
