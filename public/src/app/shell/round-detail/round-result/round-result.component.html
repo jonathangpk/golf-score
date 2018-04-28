@@ -1,12 +1,42 @@
-<div class="standings">
-  <div>Name</div>
-  <div>Netto</div>
-  <div>Brutto</div>
-  <div>±</div>
-  <ng-container *ngFor="let u of summary$ | async">
-    <div class="cell">{{u.name}}</div>
-    <div class="cell">{{u.netto}}</div>
-    <div class="cell">{{u.brutto}}</div>
-    <div class="cell">{{u.diff}}</div>
-  </ng-container>
-</div>
+<mat-card>
+  <mat-card-title>Deine Auswertung</mat-card-title>
+  <div class="scorecard" *ngIf="scorecard">
+    <div class="label">Loch</div>
+    <div class="label">Par</div>
+    <div class="label">Score</div>
+    <div class="label">Netto</div>
+    <div class="label">Brutto</div>
+    <div class="label">±</div>
+    <ng-container *ngFor="let h of scorecard.scorecard; index as i">
+      <div class="cell">{{i+1}}</div>
+      <div class="cell">{{h.par}}</div>
+      <div class="cell">{{h.score}}</div>
+      <div class="cell">{{h.netto}}</div>
+      <div class="cell">{{h.brutto}}</div>
+      <div class="cell">{{h.score-h.par}}</div>
+    </ng-container>
+    <div class="cell sum">-</div>
+    <div class="cell sum">-</div>
+    <div class="cell sum">{{scorecard.score}}</div>
+    <div class="cell sum">{{scorecard.netto}}</div>
+    <div class="cell sum">{{scorecard.brutto}}</div>
+    <div class="cell sum">{{scorecard.diff}}</div>
+  </div>
+</mat-card>
+<mat-card *ngIf="(summary$ | async).length !== 0">
+  <mat-card-title>Tunier Wertung</mat-card-title>
+  <div class="standings">
+    <div class="label left"></div>
+    <div class="label left">Name</div>
+    <div class="label">Netto</div>
+    <div class="label">Brutto</div>
+    <div class="label">±</div>
+    <ng-container *ngFor="let u of summary$ | async; index as i">
+      <div class="cell left">{{i+1}}.</div>
+      <div class="cell left">{{u.name}}</div>
+      <div class="cell">{{u.netto}}</div>
+      <div class="cell">{{u.brutto}}</div>
+      <div class="cell">{{u.diff}}</div>
+    </ng-container>
+  </div>
+</mat-card>

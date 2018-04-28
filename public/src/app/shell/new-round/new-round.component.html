@@ -8,7 +8,7 @@
       <input type="text" placeholder="Wähle deinen Platz aus"
              required (keyup)="onCourseInputChange(course.value)"
              aria-label="Number" matInput [matAutocomplete]="auto"
-             name="course">
+             name="course" #course>
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCourseName" (optionSelected)="onSelectedCourse($event)">
         <mat-option *ngFor="let c of filteredCourses" [value]="c">
           {{ c.name }}

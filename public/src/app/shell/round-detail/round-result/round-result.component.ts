@@ -14,6 +14,8 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./round-result.component.scss']
 })
 export class RoundResultComponent implements OnInit, OnDestroy {
+  summary: ScoreSummary[] = [];
+  scorecard: ScoreSummary = null;
   sub: Subscription;
   @Select(state => state.course.courses) courses$: Observable<Course>;
   @Select(RoundState.currentRound) round$: Observable<Round>;
@@ -28,17 +30,18 @@ export class RoundResultComponent implements OnInit, OnDestroy {
           return [];
         }
         const results = this.getResults(scores, course, users);
-        console.log(results);
         // this.userSummary = results.find(e => e.uid === this.afAuth.auth.currentUser.uid);
         return results
-          .sort((a, b) => a.brutto - b.brutto);
+          .sort((a, b) => b.brutto - a.brutto);
       } else { return []; }
   });
   constructor(private sb: MatSnackBar, private afAuth: AngularFireAuth) {
-    this.sub = this.scores$.subscribe(e => {console.log('scores', e); });
+    this.sub = this.summary$.subscribe(r => {
+      this.summary = r;
+      this.scorecard = r.find(e => e.uid === this.afAuth.auth.currentUser.uid);
+    });
   }
   ngOnDestroy() {
-    this.sub.unsubscribe();
   }
   ngOnInit() {
   }
@@ -58,7 +61,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
   getResultFromScore(s, course: Course, hcp) {
     let brutto, netto, diff;
     const vg = -this.getSpielvorgabe(hcp, course.slope, course.cr, course.par);
-    const sum = {brutto: 0, netto: 0, diff: 0, scorecard: []};
+    const sum = {brutto: 0, netto: 0, diff: 0, score: 0, par: course.par, scorecard: []};
     for (const k in s) {
       if (!s[k]) { continue; }
       brutto = Math.max(0, course.scorecard[k].par - s[k] + 2);
@@ -68,7 +71,8 @@ export class RoundResultComponent implements OnInit, OnDestroy {
       sum.brutto += brutto;
       sum.netto += netto;
       sum.diff += diff;
-      sum.scorecard.push({brutto, netto, score: s[k], par: course.scorecard[k].par, hole: k});
+      sum.score += s[k];
+      sum.scorecard.push({brutto, netto, score: s[k], par: course.scorecard[k].par, hole: k, hcp: course.scorecard[k].hcp});
     }
     return sum;
   }

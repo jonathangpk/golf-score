@@ -11,13 +11,13 @@
       <input matInput placeholder="Anzahl der Löcher" required type="number" value="9" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.holes" name="holes">
     </mat-form-field>
     <mat-form-field class="meta-input">
-      <input matInput placeholder="Par" required type="number" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.par" name="par">
+      <input matInput placeholder="Par" required type="number" [(ngModel)]="course.par" name="par">
     </mat-form-field>
     <mat-form-field class="meta-input">
-      <input matInput placeholder="Slope" required type="number" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.slope" name="slope">
+      <input matInput placeholder="Slope" required type="number" [(ngModel)]="course.slope" name="slope">
     </mat-form-field>
     <mat-form-field class="meta-input">
-      <input matInput placeholder="Cr score" required type="number" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.cr" name="cr">
+      <input matInput placeholder="Cr score" required type="number" [(ngModel)]="course.cr" name="cr">
     </mat-form-field>
     <div class="scorecard">
       <div class="score-label">loch</div>

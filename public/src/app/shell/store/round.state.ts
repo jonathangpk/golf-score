@@ -23,12 +23,15 @@ export interface ScoreSummary {
   brutto: number;
   netto: number;
   diff: number;
+  score: number;
+  par: number;
   scorecard: {
     hole: number;
     brutto: number;
     netto: number;
     par: number;
     score: number
+    hcp: number;
   }[];
 }
 export interface UserModel {
