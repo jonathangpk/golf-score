@@ -29,7 +29,7 @@ export class AuthState {
               private route: ActivatedRoute) {
     this.routesub = this.route.queryParams.subscribe(params => {
       this.params = params;
-    };
+    });
   }
   @Action(AuthChange)
   authChange({ patchState }: StateContext<AuthStateModel>, { payload }: AuthChange) {
