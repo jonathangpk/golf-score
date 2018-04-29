@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { StartQuery } from '../auth/store/auth.actions';
 import { FirestoreService } from '../core/firestore.service';
 
 @Component({

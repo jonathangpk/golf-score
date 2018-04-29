@@ -4,10 +4,11 @@ import * as firebase from 'firebase';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'firebase';
 import { FirestoreService } from '../../core/firestore.service';
 import { ChangeUserInfo, ResetRoundState } from '../../shell/store/round.actions';
+import { Subscription } from 'rxjs/Subscription';
 
 export interface AuthStateModel {
   uid: string;
@@ -22,7 +23,14 @@ export interface AuthStateModel {
   }
 })
 export class AuthState {
-  constructor(private afAuth: AngularFireAuth, private router: Router, private fss: FirestoreService) {}
+  routesub: Subscription;
+  params = {};
+  constructor(private afAuth: AngularFireAuth, private router: Router, private fss: FirestoreService,
+              private route: ActivatedRoute) {
+    this.routesub = this.route.queryParams.subscribe(params => {
+      this.params = params;
+    };
+  }
   @Action(AuthChange)
   authChange({ patchState }: StateContext<AuthStateModel>, { payload }: AuthChange) {
     patchState ({
@@ -35,9 +43,7 @@ export class AuthState {
     return Observable.fromPromise(
       this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
     ).pipe(tap(() => {
-      const user = this.afAuth.auth.currentUser;
-      console.log(user);
-      this.router.navigate(['/']);
+      this.navigateToShell();
     }));
   }
   @Action(LoginEmail)
@@ -45,7 +51,7 @@ export class AuthState {
     return Observable.fromPromise(
       this.afAuth.auth.signInWithEmailAndPassword(payload.email, payload.password)
     ).pipe(tap(user => {
-      this.router.navigate(['/']);
+      this.navigateToShell();
     }));
   }
 
@@ -54,7 +60,7 @@ export class AuthState {
     return Observable.fromPromise(
       this.afAuth.auth.signInAnonymously())
     .pipe(tap(user => {
-      this.router.navigate(['/']);
+      this.navigateToShell();
       dispatch(new ChangeUserInfo({name: 'Gast', handicap: 54}));
     }));
   }
@@ -65,8 +71,8 @@ export class AuthState {
     return Observable.fromPromise(
       this.afAuth.auth.createUserWithEmailAndPassword(payload.email, payload.password))
       .pipe(tap(user => {
-        this.router.navigate(['/']);
         dispatch(new ChangeUserInfo({name: payload.name, handicap: payload.handicap}));
+        this.navigateToShell();
         // TODO Set Name and HCP: change via Actions ChangeName, ChangeHcp; data is in Payload
       }));
   }
@@ -78,9 +84,19 @@ export class AuthState {
       this.afAuth.auth.signOut()
     )
       .pipe(tap(() => {
-        dispatch(new ResetRoundState())
-        this.router.navigate(['/login']);
+        dispatch(new ResetRoundState());
+        this.router.navigate(['login']);
       }));
+  }
+  navigateToShell() {
+    const p = this.params['returnUrl'];
+    if (p) {
+      this.router.navigate(p.split('/'));
+    } else {
+      console.log('in else');
+      this.router.navigate(['']);
+      this.routesub.unsubscribe();
+    }
   }
 
 }

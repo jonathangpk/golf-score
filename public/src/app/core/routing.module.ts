@@ -13,8 +13,8 @@ import { InviteComponent } from '../shell/invite/invite.component';
 import { LogedinGuard } from './logedin.guard';
 
 export const appRoutes = [
-  { path: 'login', component: LoginComponent, canActivate: [] },
-  { path: 'register', component: RegisterComponent, canActivate: [] },
+  { path: 'login', component: LoginComponent, canActivate: [LogedinGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [LogedinGuard] },
   {
     path: '',
     canActivate: [AuthGuard],

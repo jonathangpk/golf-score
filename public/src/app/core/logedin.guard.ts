@@ -11,9 +11,9 @@ export class LogedinGuard implements CanActivate, CanActivateChild {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return this.afAuth.authState.pipe(map(user => {
       if (user) {
+        this.router.navigate(['/']);
         return false;
       } else {
-        this.router.navigate(['/'], {queryParams: {returnUrl: state.url}});
         return true;
       }
     }));
