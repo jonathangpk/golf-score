@@ -25,14 +25,24 @@
   <ng-template #noScore>Noch kein Ergebnis<br>Klicke Scorekarte um deinen Score einzutragen</ng-template>
 </mat-card>
 <mat-card *ngIf="(summary$ | async).length > 1">
-  <mat-card-title>Tunier Wertung</mat-card-title>
+  <mat-card-title>Turnier Wertung</mat-card-title>
+  <div>
+    Sortieren:
+    <mat-form-field>
+      <mat-select placeholder="Sortieren nach" [(ngModel)]="sortSummaryBy" (selectionChange)="onSortTypeChange()">
+        <mat-option value="netto">Netto</mat-option>
+        <mat-option value="brutto">Brutto</mat-option>
+        <mat-option value="diff">±</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
   <div class="standings">
     <div class="label left"></div>
     <div class="label left name">Name</div>
     <div class="label">Netto</div>
     <div class="label">Brutto</div>
     <div class="label">±</div>
-    <ng-container *ngFor="let u of summary$ | async; index as i">
+    <ng-container *ngFor="let u of summary; index as i">
       <div class="cell left">{{i+1}}.</div>
       <div class="cell left name">{{u.name}}</div>
       <div class="cell">{{u.netto}}</div>
@@ -43,5 +53,6 @@
 </mat-card>
 <mat-card>
   <mat-card-title>Lade Freunde ein</mat-card-title>
-  <div class="invite-link break-word" (click)="onCopyUrl()"><mat-icon>content_copy</mat-icon>{{getUrl()}} </div>
+  <mat-card-subtitle>Schicke ihnen diesen Link dann werden sie der Runde hinzugefügt</mat-card-subtitle>
+  <div class="invite-link break-word" (click)="onCopyUrl()">{{getUrl()}} </div>
 </mat-card>

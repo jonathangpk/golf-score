@@ -17,6 +17,7 @@ import { environment } from '../../../../environments/environment';
 export class RoundResultComponent implements OnInit, OnDestroy {
   summary: ScoreSummary[] = [];
   scorecard: ScoreSummary = null;
+  sortSummaryBy = 'netto';
   sub: Subscription;
   roundId: string;
   @Select(state => state.course.courses) courses$: Observable<Course>;
@@ -34,8 +35,11 @@ export class RoundResultComponent implements OnInit, OnDestroy {
         }
         const results = this.getResults(scores, course, users);
         // this.userSummary = results.find(e => e.uid === this.afAuth.auth.currentUser.uid);
-        return results
-          .sort((a, b) => b.brutto - a.brutto);
+        if (this.sortSummaryBy === 'diff') {
+          return results.sort((a, b) => a.diff - b.diff);
+        } else {
+          return results.sort((a, b) => b[this.sortSummaryBy] - a[this.sortSummaryBy]);
+        }
       } else { return []; }
   });
   constructor(private sb: MatSnackBar, private afAuth: AngularFireAuth) {
@@ -63,6 +67,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
       console.warn('Copy to clipboard failed.', ex);
       return false;
     } finally {
+      this.sb.open('Kopiert', '', {duration: 700});
       document.body.removeChild(textarea);
     }
   }
@@ -99,6 +104,13 @@ export class RoundResultComponent implements OnInit, OnDestroy {
   }
   getSpielvorgabe (hcp: number, slope: number, cr: number, par: number) {
     return Math.round(Math.max(-hcp, -36) * (slope / 113) - cr + par);
+  }
+  onSortTypeChange() {
+    if (this.sortSummaryBy === 'diff') {
+      this.summary = this.summary.sort((a, b) => a.diff - b.diff);
+    } else {
+      this.summary = this.summary.sort((a, b) => b[this.sortSummaryBy] - a[this.sortSummaryBy]);
+    }
   }
   getNettoPunkte(course: Course, s, handicap) {
     const vg = -this.getSpielvorgabe(handicap, course.slope, course.cr, course.par);

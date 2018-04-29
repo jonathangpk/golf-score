@@ -5,7 +5,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatIconModule,
-  MatInputModule,
+  MatInputModule, MatSelectModule,
   MatSnackBarModule,
   MatTabsModule,
   MatToolbarModule
@@ -50,6 +50,7 @@ import { RoundResultComponent } from './round-detail/round-result/round-result.c
     MatSnackBarModule,
     MatTabsModule,
     MatAutocompleteModule,
+    MatSelectModule,
     AngularFirestoreModule.enablePersistence(),
   ],
   providers: [
