@@ -8,7 +8,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Round } from '../../models/round.model';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../../environments/environment';
-
+// TODO: When sorting hava a second sort parameter for same results + shared places!
 @Component({
   selector: 'app-round-result',
   templateUrl: './round-result.component.html',
