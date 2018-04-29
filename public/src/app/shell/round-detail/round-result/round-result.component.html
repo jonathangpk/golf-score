@@ -25,17 +25,16 @@
   <ng-template #noScore>Noch kein Ergebnis<br>Klicke Scorekarte um deinen Score einzutragen</ng-template>
 </mat-card>
 <mat-card *ngIf="(summary$ | async).length > 1">
-  <mat-card-title>Turnier Wertung</mat-card-title>
-  <div>
-    Sortieren:
-    <mat-form-field>
-      <mat-select placeholder="Sortieren nach" [(ngModel)]="sortSummaryBy" (selectionChange)="onSortTypeChange()">
-        <mat-option value="netto">Netto</mat-option>
-        <mat-option value="brutto">Brutto</mat-option>
-        <mat-option value="diff">±</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+  <mat-card-title>
+    Turnier Wertung
+  </mat-card-title>
+  <mat-form-field>
+    <mat-select placeholder="Sortieren nach" [(ngModel)]="sortSummaryBy" (selectionChange)="onSortTypeChange()">
+      <mat-option value="netto">Netto</mat-option>
+      <mat-option value="brutto">Brutto</mat-option>
+      <mat-option value="diff">±</mat-option>
+    </mat-select>
+  </mat-form-field>
   <div class="standings">
     <div class="label left"></div>
     <div class="label left name">Name</div>
