@@ -12,7 +12,6 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
   name = new FormControl('', [Validators.required]);
   handicap = new FormControl('', [Validators.required, Validators.max(54), Validators.min(-10)]);
   email = new FormControl('', [Validators.required, Validators.email]);
