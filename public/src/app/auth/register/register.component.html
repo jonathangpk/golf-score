@@ -1,18 +1,26 @@
 <mat-card class="card">
-  <mat-card-title>Registrierung</mat-card-title>
-  <mat-card-subtitle>Calculate your Golf Score</mat-card-subtitle>
-    <mat-form-field class="name">
-      <input matInput placeholder="Name" #name>
+  <form (ngSubmit)="onRegister()">
+    <mat-card-title>Registrierung</mat-card-title>
+    <mat-card-subtitle>Calculate your Golf Score</mat-card-subtitle>
+      <mat-form-field class="name">
+        <input matInput placeholder="Name" [formControl]="name">
+      </mat-form-field>
+      <mat-form-field class="handicap">
+        <input matInput placeholder="Handicap" type="number" [formControl]="handicap">
+      </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="E-Mail" type="email" [formControl]="email">
     </mat-form-field>
-    <mat-form-field class="handicap">
-      <input matInput placeholder="Handicap" type="number" #handicap>
+    <mat-form-field>
+      <input matInput placeholder="Password" type="password" [formControl]="password" (keyup)="onPwChange()">
     </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="E-Mail" type="email" #email>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Password" type="password" #password>
-  </mat-form-field>
-  <button mat-raised-button color="primary" (click)="onRegister(name.value, handicap.value, email.value, password.value)">Registrieren</button>
+    <mat-form-field>
+      <input matInput placeholder="Password bestätigen" type="password" [formControl]="passwordConfirm" (keyup)="onPwChange()">
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Registrieren</button>
+  </form>
   <a routerLink="/login">Schon Registriert? Hier einloggen</a>
+  <mat-progress-bar [ngStyle]="{'display': loading ? 'block' : 'none'}"></mat-progress-bar>
 </mat-card>
+
+

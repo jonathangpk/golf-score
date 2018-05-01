@@ -24,6 +24,9 @@ import { InviteComponent } from './invite/invite.component';
 import { RoundSettingsComponent } from './round-detail/round-settings/round-settings.component';
 import { RoundScorecardComponent } from './round-detail/round-scorecard/round-scorecard.component';
 import { RoundResultComponent } from './round-detail/round-result/round-result.component';
+import { NgxsModule } from '@ngxs/store';
+import { CourseState } from './store/course.state';
+import { RoundState } from './store/round.state';
 
 @NgModule({
   declarations: [
@@ -51,6 +54,10 @@ import { RoundResultComponent } from './round-detail/round-result/round-result.c
     MatTabsModule,
     MatAutocompleteModule,
     MatSelectModule,
+    NgxsModule.forFeature([
+      CourseState,
+      RoundState
+    ]),
     AngularFirestoreModule.enablePersistence(),
   ],
   providers: [

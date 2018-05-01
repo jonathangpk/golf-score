@@ -1,16 +1,30 @@
 <mat-card class="card">
   <mat-card-title>Golf Score</mat-card-title>
   <mat-card-subtitle>Calculate your Golf Score</mat-card-subtitle>
-  <div>Login</div>
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="E-Mail" type="email" #email>
-  </mat-form-field>
-  <mat-form-field class="example-full-width">
-    <input matInput placeholder="Password" type="password" #password>
-  </mat-form-field>
-  <button mat-raised-button color="primary" (click)="onLoginEmail(email.value, password.value)">Einloggen</button>
+  <form (ngSubmit)="onLoginEmail(email.value, password.value)">
+    <div>Login</div>
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="E-Mail" type="email" [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">
+        Bitte eine gültige E-Mail angeben
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Password" [type]="hidePassword ? 'password' : 'text'" [formControl]="password" required>
+      <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+      <mat-error *ngIf="password.errors?.minlength || password.errors?.required">
+        Das Password ist mindestens 8 Zeichen lang
+      </mat-error>
+      <mat-error *ngIf="password.errors?.incorrect">
+        Falsches Password
+      </mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Einloggen</button>
+  </form>
+  <a routerLink="/register">Mit Email registrieren</a>
   <hr>
   <button mat-raised-button color="primary" (click)="onLoginGoogle()">Mit Google einloggen</button>
   <button mat-stroked-button color="primary" (click)="onLoginAnon()">Als Gast einloggen</button>
-  <a routerLink="/register">Mit Email registrieren</a>
+  <mat-progress-bar [ngStyle]="{'display': loading ? 'block' : 'none'}" mode="indeterminate"></mat-progress-bar>
 </mat-card>
+
