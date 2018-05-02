@@ -18,6 +18,8 @@ import { AuthGuard } from './core/auth.guard';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { LogedinGuard } from './core/logedin.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CourseState } from './shell/store/course.state';
+import { RoundState } from './shell/store/round.state';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatIconModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     NgxsModule.forRoot([
-      AuthState
+      AuthState,
+      CourseState,
+      RoundState
     ]),
     environment.production ? [] : NgxsReduxDevtoolsPluginModule.forRoot()
   ],

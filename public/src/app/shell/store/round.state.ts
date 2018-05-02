@@ -55,7 +55,7 @@ const defaults = {
 // TODO Delete State after Logout
 @State<RoundStateModel>({
   name: 'round',
-  defaults
+  defaults: JSON.parse(JSON.stringify(defaults))
 })
 export class RoundState {
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private sb: MatSnackBar, private router: Router) {
@@ -87,7 +87,8 @@ export class RoundState {
   }
   @Action(ResetRoundState)
   resetRoundState({ setState }: StateContext<RoundStateModel>) {
-
+    console.log(defaults);
+    setState(JSON.parse(JSON.stringify(defaults)));
   }
   @Action(SetCurrentRound)
   setCurrentRound({ patchState }: StateContext<RoundStateModel>, { payload }: SetCurrentRound) {

@@ -79,11 +79,11 @@ export class AuthState {
 
   @Action(Logout)
   logout({ dispatch }: StateContext<AuthStateModel>) {
-    this.fss.unsubscribeAll();
     return Observable.fromPromise(
       this.afAuth.auth.signOut()
     )
       .pipe(tap(() => {
+        this.fss.unsubscribeAll();
         dispatch(new ResetRoundState());
         this.router.navigate(['login']);
       }));

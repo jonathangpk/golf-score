@@ -55,8 +55,6 @@ import { RoundState } from './store/round.state';
     MatAutocompleteModule,
     MatSelectModule,
     NgxsModule.forFeature([
-      CourseState,
-      RoundState
     ]),
     AngularFirestoreModule.enablePersistence(),
   ],
