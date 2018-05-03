@@ -6,6 +6,7 @@ import { AddCoursesState, RemoveCourseState } from '../shell/store/course.action
 import { Subscription } from 'rxjs/Subscription';
 import { AddRound, ChangeRoundUserInfo, ChangeScore, ChangeUserInfo, DeleteRound } from '../shell/store/round.actions';
 import { Round } from '../shell/models/round.model';
+import { ProgressBarService } from '../shell/progress-bar.service';
 
 
 @Injectable()

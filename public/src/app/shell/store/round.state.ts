@@ -17,6 +17,7 @@ import firebase from '@firebase/app';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { Course } from '../models/course.model';
+import { ProgressBarService } from '../progress-bar.service';
 
 export interface ScoreSummary {
   uid: string;
@@ -51,14 +52,14 @@ const defaults = {
   scores: {},
   user: {name: 'Gast', handicap: 54},
   users: {}
-}
-// TODO Delete State after Logout
+};
 @State<RoundStateModel>({
   name: 'round',
   defaults: JSON.parse(JSON.stringify(defaults))
 })
 export class RoundState {
-  constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private sb: MatSnackBar, private router: Router) {
+  constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private sb: MatSnackBar, private router: Router,
+              private pbs: ProgressBarService) {
   }
   @Selector()
   static localUser(state: RoundStateModel) {
@@ -98,6 +99,7 @@ export class RoundState {
   }
   @Action(TryCreateRound)
   tryCreateRound({dispatch}: StateContext<RoundStateModel>, { payload }: TryCreateRound) {
+    this.pbs.inc();
     const uid = this.afAuth.auth.currentUser.uid;
     return Observable.fromPromise(
       this.fs.collection('rounds').add({
@@ -107,13 +109,20 @@ export class RoundState {
         users: [uid],
         ...payload
       }).then(r => {
+        this.pbs.dec();
         return dispatch(new TryAddRound({id: r.id}));
+      }).catch(err => {
+        this.sb.open('Speichern fehlgeschlagen', '', {duration: 3000});
+        this.pbs.dec();
+        console.log(err);
+        return Promise.reject(err);
       })
     );
   }
   @Action(TryAddRound)
   tryAddRound({ getState }: StateContext<RoundStateModel>, { payload }: TryAddRound) {
     const uid = this.afAuth.auth.currentUser.uid;
+    this.pbs.inc();
     return Observable.fromPromise(
       this.fs.doc(`rounds/${payload.id}/users/${uid}`).set({
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -124,9 +133,11 @@ export class RoundState {
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
       }).then(r => {
+        this.pbs.dec();
         this.router.navigate(['round', payload.id]);
       })
-        .catch(err => {
+      .catch(err => {
+        this.pbs.dec();
         this.sb.open(err, '',  {
           duration: 3000
         });
@@ -136,6 +147,7 @@ export class RoundState {
   @Action(TryDeleteRound)
   tryDeleteRound({}: StateContext<RoundStateModel>, { payload }: TryDeleteRound) {
     const uid = this.afAuth.auth.currentUser.uid;
+    this.pbs.inc();
     return Observable.fromPromise(
       this.fs.doc(`rounds/${payload.id}/users/${uid}`).delete()
         .then( r => {
@@ -143,9 +155,13 @@ export class RoundState {
         })
         .then(r => {
           this.router.navigate(['']);
+          this.pbs.dec();
           return this.sb.open('Gelöscht', '', { duration: 2000});
         })
-        .catch(err => this.sb.open(err, '', { duration: 3000}))
+        .catch(err => {
+          this.pbs.dec();
+          this.sb.open(err, '', { duration: 3000})
+        })
     );
   }
   @Action(AddRound)
@@ -165,10 +181,17 @@ export class RoundState {
   @Action(TryChangeScore)
   tryChangeScore({ }: StateContext<RoundStateModel>, { payload }: TryChangeScore) {
     const uid = this.afAuth.auth.currentUser.uid;
+    this.pbs.inc();
     return Observable.fromPromise(
       this.fs.doc(`rounds/${payload.rid}/scores/${uid}`).set(payload.score)
-        .then(r => this.sb.open('Gespeichert', '', {duration: 700}))
-        .catch(e => this.sb.open('Es ist ein Fehler aufgetreten'))
+        .then(r => {
+          this.pbs.dec();
+          this.sb.open('Gespeichert', '', {duration: 700})
+        })
+        .catch(e => {
+          this.pbs.dec();
+          this.sb.open('Es ist ein Fehler aufgetreten')
+        })
     );
   }
   @Action(ChangeScore)
@@ -185,9 +208,18 @@ export class RoundState {
    */
   @Action(TryChangeUserInfo)
   tryChangeUserInfo({ patchState }: StateContext<RoundStateModel>, { payload }: TryChangeUserInfo) {
+    this.pbs.inc();
     const uid = this.afAuth.auth.currentUser.uid;
     return Observable.fromPromise(
       this.fs.doc(`users/${uid}`).set(payload)
+        .then(r => {
+          this.pbs.dec();
+          this.sb.open('Gespeichert', '', {duration: 700});
+        })
+        .catch(err => {
+          this.pbs.dec();
+          this.sb.open('Fehler', '', {duration: 700});
+        })
     );
   }
   @Action(ChangeUserInfo)
@@ -209,13 +241,16 @@ export class RoundState {
   }
   @Action(TryChangeRoundUserInfo)
   tryChangeRoundUserInfo({ }: StateContext<RoundStateModel>, { payload }: TryChangeRoundUserInfo) {
+    this.pbs.inc();
     return Observable.fromPromise(
       this.fs.doc(`rounds/${payload.rid}/users/${payload.uid}`).set(payload.user)
         .then(e => {
+          this.pbs.dec();
           this.sb.open('Gespeichert', '', {duration: 700});
         })
         .catch(e => {
-          this.sb.open('Error: '+e, '', {duration: 700});
+          this.pbs.dec();
+          this.sb.open('Error: ' + e, '', {duration: 700});
         })
     );
   }

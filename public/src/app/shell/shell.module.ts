@@ -5,7 +5,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatIconModule,
-  MatInputModule, MatSelectModule,
+  MatInputModule, MatProgressBarModule, MatSelectModule,
   MatSnackBarModule,
   MatTabsModule,
   MatToolbarModule
@@ -27,6 +27,7 @@ import { RoundResultComponent } from './round-detail/round-result/round-result.c
 import { NgxsModule } from '@ngxs/store';
 import { CourseState } from './store/course.state';
 import { RoundState } from './store/round.state';
+import { ProgressBarService } from './progress-bar.service';
 
 @NgModule({
   declarations: [
@@ -54,12 +55,14 @@ import { RoundState } from './store/round.state';
     MatTabsModule,
     MatAutocompleteModule,
     MatSelectModule,
+    MatProgressBarModule,
     NgxsModule.forFeature([
     ]),
     AngularFirestoreModule.enablePersistence(),
   ],
   providers: [
-    FirestoreService
+    FirestoreService,
+    ProgressBarService
   ],
   exports: [
     ShellComponent

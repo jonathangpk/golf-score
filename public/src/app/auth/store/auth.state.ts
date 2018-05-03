@@ -9,6 +9,8 @@ import { User } from 'firebase';
 import { FirestoreService } from '../../core/firestore.service';
 import { ChangeUserInfo, ResetRoundState } from '../../shell/store/round.actions';
 import { Subscription } from 'rxjs/Subscription';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { MatSnackBar } from '@angular/material';
 
 export interface AuthStateModel {
   uid: string;
@@ -26,7 +28,7 @@ export class AuthState {
   routesub: Subscription;
   params = {};
   constructor(private afAuth: AngularFireAuth, private router: Router, private fss: FirestoreService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute, private fs: AngularFirestore, private sb: MatSnackBar) {
     this.routesub = this.route.queryParams.subscribe(params => {
       this.params = params;
     });
@@ -69,12 +71,8 @@ export class AuthState {
   register({ dispatch }: StateContext<AuthStateModel>, { payload }: Register) {
     console.log(payload);
     return Observable.fromPromise(
-      this.afAuth.auth.createUserWithEmailAndPassword(payload.email, payload.password))
-      .pipe(tap(user => {
-        dispatch(new ChangeUserInfo({name: payload.name, handicap: payload.handicap}));
-        this.navigateToShell();
-        // TODO Set Name and HCP: change via Actions ChangeName, ChangeHcp; data is in Payload
-      }));
+      this.afAuth.auth.createUserWithEmailAndPassword(payload.email, payload.password)
+    );
   }
 
   @Action(Logout)

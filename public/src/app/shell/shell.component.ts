@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FirestoreService } from '../core/firestore.service';
+import { ProgressBarService } from './progress-bar.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-shell',
@@ -10,6 +12,7 @@ import { FirestoreService } from '../core/firestore.service';
         <div routerLink="/">Golf Score</div>
         <button mat-icon-button routerLink="/profile"><mat-icon>account_circle</mat-icon></button>
       </mat-toolbar>
+      <mat-progress-bar [ngStyle]="{'display': loading ? 'block' : 'none'}" mode="indeterminate"></mat-progress-bar>
       <router-outlet></router-outlet>
     </div>
   `,
@@ -21,8 +24,14 @@ import { FirestoreService } from '../core/firestore.service';
     }`
   ]
 })
-export class ShellComponent {
-  constructor(private store: Store, private fss: FirestoreService) {
+export class ShellComponent implements OnDestroy{
+  loading = false;
+  loadSub: Subscription;
+  constructor(private store: Store, private fss: FirestoreService, private pbs: ProgressBarService) {
     this.fss.queryAll();
+    this.loadSub = this.pbs.progressEmitter.subscribe(l => this.loading = l);
+  }
+  ngOnDestroy() {
+    this.loadSub.unsubscribe();
   }
 }

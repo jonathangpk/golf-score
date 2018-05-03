@@ -7,6 +7,7 @@
       </mat-form-field>
       <mat-form-field class="handicap">
         <input matInput placeholder="Handicap" type="number" formControlName="handicap" [formGroup]="registerForm">
+        <mat-hint>Handicap fängt bei 54 an, bei Handicap besser als 0 mit minus versehen</mat-hint>
         <mat-error>
           Bitte ein Handicap zwischen -20 und 54 angeben
         </mat-error>
@@ -29,6 +30,7 @@
         Die Passwörter stimmen nicht überein
       </mat-error>
     </mat-form-field>
+    <!-- TODO Disable Register button if invalid -->
     <button mat-raised-button color="primary" type="submit">Registrieren</button>
   </form>
   <a routerLink="/login">Schon Registriert? Hier einloggen</a>

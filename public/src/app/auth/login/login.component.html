@@ -2,7 +2,7 @@
   <mat-card-title>Golf Score</mat-card-title>
   <mat-card-subtitle>Calculate your Golf Score</mat-card-subtitle>
   <form (ngSubmit)="onLoginEmail(email.value, password.value)">
-    <div>Login</div>
+    <mat-card-title>Einloggen</mat-card-title>
     <mat-form-field class="example-full-width">
       <input matInput placeholder="E-Mail" type="email" [formControl]="email" required>
       <mat-error *ngIf="email.invalid">
@@ -21,8 +21,8 @@
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Einloggen</button>
   </form>
+  <button mat-raised-button color="primary" routerLink="/register">Mit Email registrieren</button>
   <p>Password vergessen? <a routerLink="" (click)="onResetPassword()">Password zurücksetzen.</a></p>
-  <a routerLink="/register">Mit Email registrieren</a>
   <hr>
   <button mat-raised-button color="primary" (click)="onLoginGoogle()">Mit Google einloggen</button>
   <button mat-stroked-button color="primary" (click)="onLoginAnon()">Als Gast einloggen</button>
