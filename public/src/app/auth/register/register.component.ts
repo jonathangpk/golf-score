@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AngularFireAuth } from 'angularfire2/auth';
 import { ChangeUserInfo } from '../../shell/store/round.actions';
 import { MatSnackBar } from '@angular/material';
+import { PasswordConfirmValidator } from '../../core/password-confirm.validator';
 
 @Component({
   selector: 'app-register',
@@ -12,39 +13,41 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  name = new FormControl('', [Validators.required]);
-  handicap = new FormControl('', [Validators.required, Validators.max(54), Validators.min(-10)]);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
-  passwordConfirm = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  registerForm: FormGroup;
   loading = false;
-  constructor(private store: Store, private afAuth: AngularFireAuth, private sb: MatSnackBar) {
+  constructor(private store: Store, private afAuth: AngularFireAuth, private sb: MatSnackBar, private fb: FormBuilder) {
+    this.createForm();
   }
-
+  createForm() {
+    this.registerForm = this.fb.group({
+      name: ['', Validators.required],
+      handicap: ['', [Validators.required, Validators.max(54), Validators.min(-20)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.min(8)]],
+      passwordConfirm: ['', [Validators.required]],
+    }, {
+      validator: PasswordConfirmValidator.matchPassword
+    });
+  }
   ngOnInit() {
   }
-  onPwChange() {
-  }
   onRegister() {
-    if (this.name.valid && this.handicap.valid && this.email.valid
-      && this.password.value.length > 7 && this.password.value === this.passwordConfirm.value) {
+    console.log(this.registerForm);
+    if (this.registerForm.status === 'VALID') {
       this.loading = true;
-      this.afAuth.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
+      const vals = this.registerForm.value;
+      this.afAuth.auth.createUserWithEmailAndPassword(vals.email, vals.password)
         .then(r => {
           this.loading = false;
-          this.store.dispatch(new ChangeUserInfo({name: this.name.value, handicap: this.handicap.value}));
+          this.store.dispatch(new ChangeUserInfo({name: vals.name, handicap: vals.handicap}));
         })
         .catch(err => {
           this.loading = false;
           this.sb.open(err, '', {duration: 3000});
         });
-    } else if (this.password.value !== this.passwordConfirm.value) {
-      this.sb.open('Passwörter stimmen nicht überein', '', {duration: 5000});
     } else {
-          this.sb.open('Korrigiere die falschen Eingaben', '', {duration: 2000});
+      this.sb.open('Korrigiere die falschen Eingaben', '', {duration: 2000});
     }
-    // this.registerForm.
-    // this.store.dispatch(new Register({name, handicap, email, password}));
   }
 
 }

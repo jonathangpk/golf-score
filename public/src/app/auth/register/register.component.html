@@ -1,21 +1,33 @@
 <mat-card class="card">
-  <form (ngSubmit)="onRegister()">
+  <form (ngSubmit)="onRegister()" [formGroup]="registerForm">
     <mat-card-title>Registrierung</mat-card-title>
     <mat-card-subtitle>Calculate your Golf Score</mat-card-subtitle>
       <mat-form-field class="name">
-        <input matInput placeholder="Name" [formControl]="name">
+        <input matInput placeholder="Name" formControlName="name" [formGroup]="registerForm">
       </mat-form-field>
       <mat-form-field class="handicap">
-        <input matInput placeholder="Handicap" type="number" [formControl]="handicap">
+        <input matInput placeholder="Handicap" type="number" formControlName="handicap" [formGroup]="registerForm">
+        <mat-error>
+          Bitte ein Handicap zwischen -20 und 54 angeben
+        </mat-error>
       </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="E-Mail" type="email" [formControl]="email">
+      <input matInput placeholder="E-Mail" type="email" formControlName="email" [formGroup]="registerForm">
+      <mat-error>
+        Bitte eine gültige Email angeben
+      </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Password" type="password" [formControl]="password" (keyup)="onPwChange()">
+      <input matInput placeholder="Password" type="password" formControlName="password" [formGroup]="registerForm">
+      <mat-error>
+        Das Password muss mindestens 8 Zeichen enthalten
+      </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Password bestätigen" type="password" [formControl]="passwordConfirm" (keyup)="onPwChange()">
+      <input matInput placeholder="Password bestätigen" type="password" formControlName="passwordConfirm" [formGroup]="registerForm">
+      <mat-error>
+        Die Passwörter stimmen nicht überein
+      </mat-error>
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Registrieren</button>
   </form>
