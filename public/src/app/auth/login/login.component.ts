@@ -77,6 +77,26 @@ export class LoginComponent implements OnInit {
         }
       });
   }
+  onResetPassword() {
+    if (this.email.valid) {
+      this.loading = true;
+      this.afAuth.auth.sendPasswordResetEmail(this.email.value)
+        .then(r => {
+          this.loading = false;
+          this.sb.open('E-Mail zum zurücksetzen wurde verschickt', '', {duration: 2000});
+        })
+        .catch(err => {
+          this.loading = false;
+          if (err.code === 'auth/user-not-found') {
+            this.sb.open('Diese E-Mail ist uns nicht bekannt', '', {duration: 2000});
+          } else {
+            this.sb.open(err, '', {duration: 2000});
+          }
+        });
+    } else {
+      this.sb.open('Bitte geben sie eine gültige Email Adresse an', '', {duration: 2000});
+    }
+  }
   navigateToShell() {
     const p = this.params['returnUrl'];
     if (p) {
