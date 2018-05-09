@@ -90,6 +90,10 @@ export class RoundResultComponent implements OnInit, OnDestroy {
     const sum = {brutto: 0, netto: 0, diff: 0, score: 0, par: course.par, scorecard: []};
     for (const k in s) {
       if (!s[k]) { continue; }
+      if (!course.scorecard[k]) {
+        console.log('no scorecard');
+        continue;
+      }
       brutto = Math.max(0, course.scorecard[k].par - s[k] + 2);
       const vor = Math.floor(vg / 18) + ((course.scorecard[k].hcp <= vg % 18) ? 1 : 0);
       netto = Math.max(0, vor + course.scorecard[k].par - s[k] + 2);
