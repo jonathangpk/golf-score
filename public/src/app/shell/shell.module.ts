@@ -5,7 +5,9 @@ import {
   MatButtonModule,
   MatCardModule,
   MatIconModule,
-  MatInputModule, MatProgressBarModule, MatSelectModule,
+  MatInputModule,
+  MatProgressBarModule,
+  MatSelectModule,
   MatSnackBarModule,
   MatTabsModule,
   MatToolbarModule
@@ -25,8 +27,6 @@ import { RoundSettingsComponent } from './round-detail/round-settings/round-sett
 import { RoundScorecardComponent } from './round-detail/round-scorecard/round-scorecard.component';
 import { RoundResultComponent } from './round-detail/round-result/round-result.component';
 import { NgxsModule } from '@ngxs/store';
-import { CourseState } from './store/course.state';
-import { RoundState } from './store/round.state';
 import { ProgressBarService } from './progress-bar.service';
 
 @NgModule({

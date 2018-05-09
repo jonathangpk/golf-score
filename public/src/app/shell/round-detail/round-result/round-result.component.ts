@@ -62,7 +62,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
     document.body.appendChild(textarea);
     textarea.select();
     try {
-      return document.execCommand('copy');  // Security exception may be thrown by some browsers.
+      document.execCommand('copy');  // Security exception may be thrown by some browsers.
     } catch (ex) {
       console.warn('Copy to clipboard failed.', ex);
       return false;
@@ -127,6 +127,26 @@ export class RoundResultComponent implements OnInit, OnDestroy {
 
     console.log(arr);
     return {};
+  }
+  iosCopyToClipboard(el) {
+    const oldContentEditable = el.contentEditable,
+      oldReadOnly = el.readOnly,
+      range = document.createRange();
+
+    el.contenteditable = true;
+    el.readonly = false;
+    range.selectNodeContents(el);
+
+    const s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(range);
+
+    el.setSelectionRange(0, 999999); // A big number, to cover anything that could be inside the element.
+
+    el.contentEditable = oldContentEditable;
+    el.readOnly = oldReadOnly;
+
+    document.execCommand('copy');
   }
 
 }

@@ -1,6 +1,6 @@
 <mat-card *ngFor="let r of rounds$ | async" (click)="onRoundDetail(r.id)">
   {{r.created | date: 'd. MMMM yyyy'}}
-  <mat-card-title>{{ r.name }}</mat-card-title>
+  <mat-card-title>{{ r?.name }}</mat-card-title>
   <mat-card-subtitle>{{ courses[r.course]?.name }}</mat-card-subtitle>
 </mat-card>
 <mat-card *ngIf="(rounds$ | async)?.length === 0">Du hast noch keine Runde erstellt. <br> <a routerLink="/round/new">Eine Runde erstellen</a></mat-card>
