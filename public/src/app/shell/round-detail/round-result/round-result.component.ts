@@ -8,6 +8,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Round } from '../../models/round.model';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../../environments/environment';
+import { CopyService } from '../../../core/copy.service';
 // TODO: When sorting hava a second sort parameter for same results + shared places!
 @Component({
   selector: 'app-round-result',
@@ -42,7 +43,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
         }
       } else { return []; }
   });
-  constructor(private sb: MatSnackBar, private afAuth: AngularFireAuth) {
+  constructor(private sb: MatSnackBar, private afAuth: AngularFireAuth, private cs: CopyService) {
     this.sub = this.summary$.subscribe(r => {
       this.summary = r;
       this.scorecard = r.find(e => e.uid === this.afAuth.auth.currentUser.uid);
@@ -56,20 +57,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
     return this.roundId ? `${environment.targetUrl}/invite/${this.roundId}` : '';
   }
   onCopyUrl() {
-    const textarea = document.createElement('textarea');
-    textarea.textContent = this.getUrl();
-    textarea.style.position = 'fixed';  // Prevent scrolling to bottom of page in MS Edge.
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      document.execCommand('copy');  // Security exception may be thrown by some browsers.
-    } catch (ex) {
-      console.warn('Copy to clipboard failed.', ex);
-      return false;
-    } finally {
-      this.sb.open('Kopiert', '', {duration: 700});
-      document.body.removeChild(textarea);
-    }
+    this.cs.copy(this.getUrl());
   }
   getResults(s, course, users): ScoreSummary[] {
     const ret = [];
@@ -148,5 +136,6 @@ export class RoundResultComponent implements OnInit, OnDestroy {
 
     document.execCommand('copy');
   }
+
 
 }

@@ -28,6 +28,7 @@ import { RoundScorecardComponent } from './round-detail/round-scorecard/round-sc
 import { RoundResultComponent } from './round-detail/round-result/round-result.component';
 import { NgxsModule } from '@ngxs/store';
 import { ProgressBarService } from './progress-bar.service';
+import { CopyService } from '../core/copy.service';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { ProgressBarService } from './progress-bar.service';
   ],
   providers: [
     FirestoreService,
-    ProgressBarService
+    ProgressBarService,
+    CopyService
   ],
   exports: [
     ShellComponent
