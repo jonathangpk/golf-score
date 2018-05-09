@@ -8,7 +8,10 @@
              name="course" #course>
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCourseName" (optionSelected)="onSelectedCourse($event)">
         <mat-option *ngFor="let c of filteredCourses" [value]="c">
-          {{ c.name }}
+          <span>{{ c.name }} | </span>
+          <small>
+            {{c.holes}} Loch, {{c.par}}/{{c.cr}}/{{c.slope}}
+          </small>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
