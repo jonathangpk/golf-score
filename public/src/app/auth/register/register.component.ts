@@ -40,6 +40,9 @@ export class RegisterComponent implements OnInit {
   }
   ngOnInit() {
   }
+  onGoToLogin() {
+    this.router.navigate(['/login'], { preserveQueryParams: true });
+  }
   onRegister() {
     console.log(this.registerForm);
     if (this.registerForm.status === 'VALID') {

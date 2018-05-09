@@ -5,58 +5,12 @@
   <title>Golf</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1976d2">
 </head>
 <body>
   <app-root></app-root>
 </body>
-<script>
-    window.Clipboard = (function(window, document, navigator) {
-      var textArea,
-        copy;
-
-      function isOS() {
-        return navigator.userAgent.match(/ipad|iphone/i);
-      }
-
-      function createTextArea(text) {
-        textArea = document.createElement('textArea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-      }
-
-      function selectText() {
-        var range,
-          selection;
-
-        if (isOS()) {
-          range = document.createRange();
-          range.selectNodeContents(textArea);
-          selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-          textArea.setSelectionRange(0, 999999);
-        } else {
-          textArea.select();
-        }
-      }
-
-      function copyToClipboard() {
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-      }
-
-      copy = function(text) {
-        createTextArea(text);
-        selectText();
-        copyToClipboard();
-      };
-
-      return {
-        copy: copy
-      };
-    })(window, document, navigator);
-</script>
 </html>

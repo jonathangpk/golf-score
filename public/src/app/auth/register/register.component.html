@@ -33,7 +33,7 @@
     <!-- TODO Disable Register button if invalid -->
     <button mat-raised-button color="primary" type="submit">Registrieren</button>
   </form>
-  <a routerLink="/login">Schon Registriert? Hier einloggen</a>
+  <a routerLink="" (click)="onGoToLogin()">Schon Registriert? Hier einloggen</a>
   <mat-progress-bar [ngStyle]="{'display': loading ? 'block' : 'none'}"></mat-progress-bar>
 </mat-card>
 
