@@ -1,0 +1,13 @@
+[debug] [2018-05-09T10:32:03.111Z] ----------------------------------------------------------------------
+[debug] [2018-05-09T10:32:03.113Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --only hosting
+[debug] [2018-05-09T10:32:03.114Z] CLI Version:   3.16.0
+[debug] [2018-05-09T10:32:03.114Z] Platform:      darwin
+[debug] [2018-05-09T10:32:03.114Z] Node Version:  v9.6.1
+[debug] [2018-05-09T10:32:03.115Z] Time:          Wed May 09 2018 12:32:03 GMT+0200 (CEST)
+[debug] [2018-05-09T10:32:03.115Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-05-09T10:32:03.135Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-05-09T10:32:03.135Z] > authorizing via signed-in user
+[debug] [2018-05-09T10:32:03.137Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/anglar-first-app  
+  
+ Wed May 09 2018 12:32:03 GMT+0200 (CEST)
