@@ -62,6 +62,10 @@ export class RoundState {
               private pbs: ProgressBarService) {
   }
   @Selector()
+  static sortedRounds(state: RoundStateModel) {
+    return state.rounds.sort((a, b) => (new Date(b.created).getTime()) - (new Date(a.created).getTime()));
+  }
+  @Selector()
   static localUser(state: RoundStateModel) {
     return state.user;
   }

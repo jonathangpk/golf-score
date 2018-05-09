@@ -3,6 +3,7 @@ export interface Round {
   name: string;
   course: string;
   users: string[]; // user ids
+  created: string;
   scores: {
     [uid: string]: Score
   };

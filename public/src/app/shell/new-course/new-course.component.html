@@ -21,12 +21,12 @@
     </mat-form-field>
     <div class="scorecard">
       <div class="score-label">Loch</div>
-      <div class="score-label">Dis <span style="font-weight: lighter">(opt.)</span></div>
+      <div class="score-label">Dis</div>
       <div class="score-label">Par</div>
       <div class="score-label">Hcp</div>
       <ng-container *ngFor="let a of holesIter; index as i">
         <div class="score-cell hole">{{ i + 1 }}</div>
-        <input [name]="'dis'+i" [(ngModel)]="course.scorecard[i].dis" class="score-input score-cell num-input" placeholder="Distanz" type="number">
+        <input [name]="'dis'+i" [(ngModel)]="course.scorecard[i].dis" required class="score-input score-cell num-input" placeholder="Distanz" type="number">
         <input [name]="'par'+i" [(ngModel)]="course.scorecard[i].par" required class="score-input score-cell num-input" placeholder="Par" type="number">
         <input [name]="'hcp'+i" [(ngModel)]="course.scorecard[i].hcp" required class="score-input score-cell num-input" placeholder="Hcp" type="number">
       </ng-container>

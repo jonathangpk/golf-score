@@ -5,6 +5,7 @@ import { Round } from '../models/round.model';
 import { Router } from '@angular/router';
 import { Course } from '../models/course.model';
 import { Subscription } from 'rxjs/Subscription';
+import { RoundState } from '../store/round.state';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  @Select(state => state.round.rounds) rounds$: Observable<Round[]>;
+  @Select(RoundState.sortedRounds) rounds$: Observable<Round[]>;
   @Select(state => state.course.courses) courses$: Observable<{[id: string]: Course}>;
   sub: Subscription;
   courses: {[id: string]: Course} = {};
