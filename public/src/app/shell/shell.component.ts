@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
       </mat-toolbar>
       <mat-progress-bar [ngStyle]="{'display': loading ? 'block' : 'none'}" mode="indeterminate"></mat-progress-bar>
       <router-outlet></router-outlet>
+      <div style="width: 100%; text-align: center;"><a routerLink="/legal" style="color: #666; font-size: 12px">Impressum</a></div>
     </div>
   `,
   styles: [

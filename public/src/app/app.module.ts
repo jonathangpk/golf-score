@@ -21,12 +21,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CourseState } from './shell/store/course.state';
 import { RoundState } from './shell/store/round.state';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { LegalComponent } from './legal/legal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    LegalComponent,
   ],
   imports: [
     BrowserModule,

@@ -11,8 +11,10 @@ import { ProfileComponent } from '../shell/profile/profile.component';
 import { RoundDetailComponent } from '../shell/round-detail/round-detail.component';
 import { InviteComponent } from '../shell/invite/invite.component';
 import { LogedinGuard } from './logedin.guard';
+import { LegalComponent } from '../legal/legal.component';
 
 export const appRoutes = [
+  { path: 'legal', component: LegalComponent},
   { path: 'login', component: LoginComponent, canActivate: [LogedinGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LogedinGuard] },
   {
