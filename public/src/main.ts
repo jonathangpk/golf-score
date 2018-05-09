@@ -26,6 +26,6 @@ interface UnhandledRejection extends Event {
 window.addEventListener('unhandledrejection', (e: UnhandledRejection) => {
   console.log(e);
   if (e.reason && e.reason.message.startsWith(tabsFs)) {
-    alert('Um die App Offline zu nutzten dürfen Sie nur einen Tab mit dieser Website offen haben, bitte schließen sie die anderen Tabs');
+    alert('Um die App Offline zu nutzen dürfen Sie nur einen Tab mit dieser Website offen haben, bitte schließen sie die anderen Tabs. Wenn sie die offline Funktion aktuell nicht brauchen, können sie auch mehrere Tabs offen haben.');
   }
 });
