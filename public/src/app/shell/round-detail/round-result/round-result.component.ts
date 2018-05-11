@@ -95,7 +95,7 @@ export class RoundResultComponent implements OnInit, OnDestroy {
     return sum;
   }
   getSpielvorgabe (hcp: number, slope: number, cr: number, par: number) {
-    return Math.round(Math.max(-hcp, -36) * (slope / 113) - cr + par);
+    return Math.round(-hcp * (slope / 113) - cr + par);
   }
   onSortTypeChange() {
     if (this.sortSummaryBy === 'diff') {
