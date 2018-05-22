@@ -20,12 +20,15 @@ import { LogedinGuard } from './core/logedin.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CourseState } from './shell/store/course.state';
 import { RoundState } from './shell/store/round.state';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { LegalComponent } from './legal/legal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    LegalComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,7 +49,8 @@ import { RoundState } from './shell/store/round.state';
       CourseState,
       RoundState
     ]),
-    environment.production ? [] : NgxsReduxDevtoolsPluginModule.forRoot()
+    environment.production ? [] : NgxsReduxDevtoolsPluginModule.forRoot(),
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     AngularFireAuth,

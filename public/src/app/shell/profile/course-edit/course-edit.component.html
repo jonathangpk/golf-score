@@ -1,0 +1,42 @@
+<mat-card *ngIf="course">
+  <mat-card-title>Platz bearbeiten</mat-card-title>
+  <div class="submit-button">
+    <button mat-raised-button color="warn" (click)="onDelete()" >Löschen</button>
+  </div>
+  <form (ngSubmit)="onEditCourse()" #courseForm="ngForm">
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Name des Platzes" required [(ngModel)]="course.name" name="name">
+    </mat-form-field>
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Ort" required [(ngModel)]="course.city" name="city">
+    </mat-form-field>
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Anzahl der Löcher" required type="number" value="9" #holes="ngModel"(change)="onHolesChange()" [(ngModel)]="course.holes" name="holes">
+    </mat-form-field>
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Par" required type="number" [(ngModel)]="course.par" name="par">
+    </mat-form-field>
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Slope" required type="number" [(ngModel)]="course.slope" name="slope">
+    </mat-form-field>
+    <mat-form-field class="meta-input">
+      <input matInput placeholder="Cr score" required type="number" [(ngModel)]="course.cr" name="cr">
+    </mat-form-field>
+    <div class="scorecard">
+      <div class="score-label">Loch</div>
+      <div class="score-label">Dis</div>
+      <div class="score-label">Par</div>
+      <div class="score-label">Hcp</div>
+      <ng-container *ngFor="let a of holesIter; index as i">
+        <div class="score-cell hole">{{ i + 1 }}</div>
+        <input [name]="'dis'+i" [(ngModel)]="course.scorecard[i].dis" required class="score-input score-cell num-input" placeholder="Distanz" type="number">
+        <input [name]="'par'+i" [(ngModel)]="course.scorecard[i].par" required class="score-input score-cell num-input" placeholder="Par" type="number">
+        <input [name]="'hcp'+i" [(ngModel)]="course.scorecard[i].hcp" required class="score-input score-cell num-input" placeholder="Hcp" type="number">
+      </ng-container>
+    </div>
+    <div class="submit-button">
+      <button mat-stroked-button color="primary" type="submit" [disabled]="!courseForm.form.valid">Speichern</button>
+    </div>
+  </form>
+  <hr>
+</mat-card>

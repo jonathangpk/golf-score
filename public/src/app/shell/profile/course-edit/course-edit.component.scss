@@ -1,0 +1,46 @@
+:host {
+  width: 100%;
+  font-size: 18px;
+}
+.mat-card {
+  margin: 10px 3%;
+}
+.meta-input {
+  width: 100%;
+}
+.scorecard {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(4, 25%);
+  align-items: center;
+}
+.score-label {
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+  padding: 8px 0;
+}
+.score-cell {
+  margin: 8px 0;
+}
+.hole {
+  text-align: center;
+}
+.submit-button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.num-input {
+  outline: none;
+  font-size: 18px;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+.num-input:focus, .num-input:active {
+  outline: none;
+  border: 0;
+  border-bottom: 1px solid #3f51b5;
+}

@@ -1,0 +1,5 @@
+<mat-nav-list>
+  <mat-list-item (click)="onDetail(c.id)" *ngFor="let c of courses$ | async">
+    {{ c.name }}
+  </mat-list-item>
+</mat-nav-list>

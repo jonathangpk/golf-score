@@ -11,8 +11,12 @@ import { ProfileComponent } from '../shell/profile/profile.component';
 import { RoundDetailComponent } from '../shell/round-detail/round-detail.component';
 import { InviteComponent } from '../shell/invite/invite.component';
 import { LogedinGuard } from './logedin.guard';
+import { LegalComponent } from '../legal/legal.component';
+import { ProfileCoursesComponent } from '../shell/profile/profile-courses/profile-courses.component';
+import { CourseEditComponent } from '../shell/profile/course-edit/course-edit.component';
 
 export const appRoutes = [
+  { path: 'legal', component: LegalComponent},
   { path: 'login', component: LoginComponent, canActivate: [LogedinGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LogedinGuard] },
   {
@@ -25,6 +29,8 @@ export const appRoutes = [
       { path: 'round/:id', component: RoundDetailComponent },
       { path: 'course/new', component: NewCourseComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'profile/courses', component: ProfileCoursesComponent },
+      { path: 'profile/courses/edit/:id', component: CourseEditComponent },
       { path: 'invite/:id', component: InviteComponent }
     ]
   },

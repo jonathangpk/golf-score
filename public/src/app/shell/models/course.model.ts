@@ -1,4 +1,6 @@
 export interface Course {
+  id?: string;
+  creator?: string;
   name: string;
   city: string;
   holes: number;

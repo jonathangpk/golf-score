@@ -1,10 +1,10 @@
 {
   "name": "Golf Score",
   "short_name": "Golf Score",
-  "theme_color": "#2196f3",
-  "background_color": "#2196f3",
+  "theme_color": "#1976d2",
+  "background_color": "#fafafa",
   "display": "standalone",
-  "Scope": "/",
+  "scope": "/",
   "start_url": "/",
   "icons": [
     {
@@ -47,6 +47,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "splash_pages": null
+  ]
 }

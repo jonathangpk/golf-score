@@ -97,6 +97,9 @@ export class LoginComponent implements OnInit {
       this.sb.open('Bitte geben sie eine gültige Email Adresse an', '', {duration: 2000});
     }
   }
+  onGoToRegister() {
+    this.router.navigate(['/register'], { preserveQueryParams: true });
+  }
   navigateToShell() {
     const p = this.params['returnUrl'];
     if (p) {
