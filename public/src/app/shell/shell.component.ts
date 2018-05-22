@@ -12,7 +12,8 @@ import { Subscription } from 'rxjs/Subscription';
         <div routerLink="/">Golf Score</div>
         <button mat-icon-button routerLink="/profile"><mat-icon>account_circle</mat-icon></button>
       </mat-toolbar>
-      <mat-progress-bar [ngStyle]="{'display': loading ? 'block' : 'none'}" mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar style="position: fixed; top: 0; z-index: 100;" 
+                        [ngStyle]="{'display': loading ? 'block' : 'none'}" mode="indeterminate"></mat-progress-bar>
       <router-outlet></router-outlet>
       <div style="width: 100%; text-align: center;"><a routerLink="/legal" style="color: #666; font-size: 12px">Impressum</a></div>
     </div>
