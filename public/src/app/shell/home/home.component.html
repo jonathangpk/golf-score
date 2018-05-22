@@ -6,5 +6,5 @@
 <mat-card *ngIf="(rounds$ | async)?.length === 0">Du hast noch keine Runde erstellt. <br> <a routerLink="/round/new">Eine Runde erstellen</a></mat-card>
 
 <button mat-fab color="primary" routerLink="/round/new"
-        style="position: absolute; bottom: 25px;right: 14px;"
+        style="position: fixed; bottom: 25px;right: 14px;"
   ><mat-icon aria-label="Runde hinzufügen">add</mat-icon></button>

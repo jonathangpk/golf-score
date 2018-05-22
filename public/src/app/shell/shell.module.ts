@@ -5,7 +5,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatIconModule,
-  MatInputModule,
+  MatInputModule, MatListModule,
   MatProgressBarModule,
   MatSelectModule,
   MatSnackBarModule,
@@ -29,6 +29,8 @@ import { RoundResultComponent } from './round-detail/round-result/round-result.c
 import { NgxsModule } from '@ngxs/store';
 import { ProgressBarService } from './progress-bar.service';
 import { CopyService } from '../core/copy.service';
+import { CourseEditComponent } from './profile/course-edit/course-edit.component';
+import { ProfileCoursesComponent } from './profile/profile-courses/profile-courses.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { CopyService } from '../core/copy.service';
     InviteComponent,
     RoundSettingsComponent,
     RoundScorecardComponent,
-    RoundResultComponent
+    RoundResultComponent,
+    ProfileCoursesComponent,
+    CourseEditComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +61,7 @@ import { CopyService } from '../core/copy.service';
     MatAutocompleteModule,
     MatSelectModule,
     MatProgressBarModule,
+    MatListModule,
     NgxsModule.forFeature([
     ]),
     AngularFirestoreModule.enablePersistence(),

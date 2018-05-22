@@ -1,6 +1,6 @@
 import { Course } from '../models/course.model';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { AddCoursesState, CreateCourse } from './course.actions';
+import { AddCoursesState, CreateCourse, RemoveCourseState, SetCurrentCourse } from './course.actions';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
@@ -14,17 +14,33 @@ export interface CourseStateModel {
   courses: {
     [id: string]: Course,
   };
+  currentCourse: string;
 }
 
 @State<CourseStateModel>({
   name: 'course',
   defaults: {
-    courses: {}
+    courses: {},
+    currentCourse: ''
   }
 })
 export class CourseState {
   constructor(private fs: AngularFirestore, private afAuth: AngularFireAuth, private pb: ProgressBarService, private sb: MatSnackBar,
               private location: Location) {}
+  @Selector()
+  static userCourses(state: CourseStateModel) {
+    const uid = firebase.auth().currentUser.uid;
+    console.log(uid);
+    const n = [];
+    const c = state.courses;
+    for (const id in c) {
+      if (c[id] && c[id].creator === uid) {
+        n.push({id, ...c[id]});
+      }
+    }
+    console.log(n);
+    return n;
+  }
   @Selector()
   static coursesArray(state: CourseStateModel) {
     const n = [];
@@ -35,6 +51,10 @@ export class CourseState {
       }
     }
     return n;
+  }
+  @Selector()
+  static currentCourse(state: CourseStateModel) {
+    return {id: state.currentCourse, ...state.courses[state.currentCourse]};
   }
   @Action(CreateCourse)
   addCoursesToState({ }: StateContext<CourseStateModel>, { payload }: CreateCourse) {
@@ -57,6 +77,20 @@ export class CourseState {
         console.log(err);
       }))
     );
+  }
+  @Action(SetCurrentCourse)
+  setCurrentCourse({ patchState }: StateContext<CourseStateModel>, { payload }: SetCurrentCourse) {
+    patchState({
+      currentCourse: payload.id
+    });
+  }
+  @Action(RemoveCourseState)
+  removeCourseState({ getState, patchState }: StateContext<CourseStateModel>, { payload }: RemoveCourseState) {
+    const x = getState().courses;
+    delete x[payload.id];
+    patchState({
+      courses: x
+    });
   }
   @Action(AddCoursesState)
   queryCourses({ getState, patchState }: StateContext<CourseStateModel>, { payload }: AddCoursesState) {
